@@ -4,15 +4,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OnlineST</title>
-    <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/lib/bootstrap-5.0.0-beta1-dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <div class="">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContainer">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContainer">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" asp-controller="RegisterProducts" asp-action="Index">Cadastrar produtos</a>
+                    <a class="nav-link" href="#">Produtos</a>
+                    <a class="nav-link" href="#">Carrinho de compras</a>
+                    <a class="nav-link" href="#">conteúdo4</a>
+                    <a class="nav-link" href="#">conteúdo5</a>
+                    <a class="nav-link" href="#">Sair/Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
 </body>
 </html>
 

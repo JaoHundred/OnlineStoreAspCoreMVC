@@ -1,1 +1,21 @@
-﻿
+﻿.border-primary {
+    border-color: lawngreen !important;
+    -webkit-border-radius: 20px;
+    border-width: 10px !important;
+    
+}
+
+#MainContainer {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+html,body{
+    height:100%;
+    width:100%;
+}
+
+a.nav-link:focus{
+    outline: 0;
+}
+

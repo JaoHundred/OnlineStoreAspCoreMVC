@@ -18,7 +18,7 @@
             @*produtos*@
             @{
                 var imageUrl = @Url.Action("ConvertToImageSRC", "RegisterProducts", new { Id = product.Id });
-                <img class="spacing img" src="@imageUrl" />
+                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)"/>
             }
 
             @*@if (user.UserType == UserType.None)

@@ -3,6 +3,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var user = TempData.PeekExt<User>(nameof(User));
 
 }
 
@@ -15,13 +16,22 @@
     {
         <div class="border border-2 card-product margin5px">
             @*produtos*@
-            <img class="spacing img" src="#" />
-            <div class="container">
+            @{
+                var imageUrl = @Url.Action("ConvertToImageSRC", "RegisterProducts", new { Id = product.Id });
+                <img class="spacing img" src="@imageUrl" />
+            }
 
-                <label class="spacing row center">Panela@*@product.Name*@</label>
-                <label class="spacing row">R$50,00@*@product.Price*@</label>
+            @*@if (user.UserType == UserType.None)
+                {*@
+            <a class="material-icons FontIcon" asp-controller="RegisterProducts" asp-action="Delete"
+               asp-route-Id="@product.Id">delete</a>
+            @*}*@
+
+            <div class="container">
+                <label class="spacing row center">@product.Name</label>
+                <label class="spacing row">@product.Price</label>
                 <div class="spacing row overflow-auto cardContent">
-                    <label>Panela para se fazer comida@*@product.Description*@Panela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comidaPanela para se fazer comida</label>
+                    <label>@product.Description</label>
                 </div>
             </div>
         </div>

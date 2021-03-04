@@ -19,3 +19,9 @@ a.nav-link:focus{
     outline: 0;
 }
 
+.FontIcon{
+    cursor:pointer;
+    text-decoration:none;
+    color:black;
+}
+

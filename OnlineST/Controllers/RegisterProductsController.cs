@@ -38,6 +38,10 @@ namespace OnlineST.Controllers
         // GET: RegisterProductsController/Create
         public ActionResult Create()
         {
+
+            //TODO: tratar a parte de registrar produtos, ao clicar no botão novo produto, abrir uma nova página html com o formulário para 
+            //adicionar todas as informações referentes a um produto
+
             try
             {
                 var product = new Product();
@@ -91,7 +95,16 @@ namespace OnlineST.Controllers
         // GET: RegisterProductsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            try
+            {
+                _repository.Delete(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
 
         // POST: RegisterProductsController/Delete/5
@@ -109,11 +122,20 @@ namespace OnlineST.Controllers
             }
         }
 
-        public IActionResult SetImage(int id)
+        public IActionResult ConvertToImageSRC(int id)
         {
-            //TODO: abrir o seletor de imagem do windows e pegar a imagem setando como bytes
+            try
+            {
+                Product product = _repository.GetAllData().First(p => p.Id == id);
 
-            return View();
+                return File(product.ImageBytes, $"image{id}.png");
+            }
+            catch
+            {
+                return View();
+            }
         }
+
+        
     }
 }

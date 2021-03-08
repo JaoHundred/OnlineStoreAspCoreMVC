@@ -42,17 +42,26 @@ namespace OnlineST.Controllers
             //TODO: tratar a parte de registrar produtos, ao clicar no botão novo produto, abrir uma nova página html com o formulário para 
             //adicionar todas as informações referentes a um produto
 
-            try
-            {
-                var product = new Product();
-                _repository.Upsert(product, product.Id);
+            //try
+            //{
+            //    var product = new Product();
+            //    _repository.Upsert(product, product.Id);
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                return View();
-            }
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //catch (Exception ex)
+            //{
+            //    return View();
+            //}
+
+            return View();
+
+        }
+
+        [HttpPost]
+        public IActionResult Register([FromForm] Product product)
+        {
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: RegisterProductsController/Create
@@ -136,6 +145,13 @@ namespace OnlineST.Controllers
             }
         }
 
-        
+        public IActionResult SaveImage()
+        {
+            //TODO: ver como se usa o input file e como eu jogo o caminho do arquivo para cá
+            return View();
+        }
+
+
+
     }
 }

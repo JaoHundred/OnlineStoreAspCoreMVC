@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "_layout";
+}
+
+@model OnlineST.Models.Product;
+
+<div class="d-flex justify-content-center align-items-center flex-column h-100" style="outline:solid red 5px;">
+    <label class="m-4">Novo produto</label>
+    <form class="align-self-center" method="post">
+        <div class="d-flex flex-column">
+
+            <input type="file" placeholder="Imagem do produto aqui" asp-controller="RegisterProducts" asp-action="SaveImage"/>
+
+            <input class="m-2" type="text" placeholder="Nome" asp-for="Name" />
+            <input class="m-2" type="text" placeholder="Preço" asp-for="Price" />
+            <textarea class="m-2" style="resize:none"  placeholder="Descrição" asp-for="Description"></textarea>
+
+            <button class="ConfirmationButton " type="submit" asp-controller="RegisterProducts" asp-action="Register">Registrar</button>
+        </div>
+    </form>
+</div>

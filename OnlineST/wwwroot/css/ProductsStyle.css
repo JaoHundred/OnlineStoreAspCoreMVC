@@ -19,40 +19,10 @@ div.card-product {
     width: 200px;
 }
 
-.spacing {
-    margin: 2px;
+.cardContent {
+    height: 150px;
 }
 
-.center {
-    align-self: center;
-    text-align: center;
+img.img {
+    height: 150px;
 }
-
-.end {
-    align-self: end;
-}
-
-.newProductButton {
-    text-decoration: none;
-    background-color: rgb(68, 186, 255);
-    border: solid 1px rgb(128, 128, 128);
-    border-radius: 2px;
-    color: aliceblue;
-    font-size: 12px;
-   
-    padding: 5px;
-}
-
-    .newProductButton:hover {
-        background-color: rgb(111, 202, 255);
-        color: aliceblue;
-        cursor:context-menu;
-    }
-
-    .cardContent{
-        height:150px;
-    }
-
-    img.img{
-        height:150px;
-    }

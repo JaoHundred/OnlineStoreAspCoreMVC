@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OnlineST.Database;
+using OnlineST.Models.ViewModel;
+using System.IO;
 
 namespace OnlineST.Controllers
 {
@@ -26,6 +28,11 @@ namespace OnlineST.Controllers
         {
             var products = _repository.GetAllData();
 
+            foreach (var item in products)
+            {
+
+            }
+
             return View(products);
         }
 
@@ -38,30 +45,45 @@ namespace OnlineST.Controllers
         // GET: RegisterProductsController/Create
         public ActionResult Create()
         {
-
-            //TODO: tratar a parte de registrar produtos, ao clicar no botão novo produto, abrir uma nova página html com o formulário para 
-            //adicionar todas as informações referentes a um produto
-
-            //try
-            //{
-            //    var product = new Product();
-            //    _repository.Upsert(product, product.Id);
-
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //catch (Exception ex)
-            //{
-            //    return View();
-            //}
-
             return View();
-
         }
 
         [HttpPost]
-        public IActionResult Register([FromForm] Product product)
+        public async Task<IActionResult> Register([FromForm] ProductViewModel productViewModel)
         {
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                //TODO:colocar o código de extração de extensão em uma classe de utilitário
+                string extensionType = new string(productViewModel.FormImage.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
+
+                if(!(extensionType is "png" or "jpg" or "jpeg"))
+                    return RedirectToAction(nameof(Create));
+
+                //TODO:colocar o código de conversão de IformFile para bytes em uma classe de utilitário
+                byte[] byteImage;
+                using (var memStream = new MemoryStream())
+                {
+                    await productViewModel.FormImage.CopyToAsync(memStream);
+                    byteImage = memStream.ToArray();
+                }
+
+                //TODO:colocar o código conversão da viewModel para o produto em classe utilitária
+                var product = new Product
+                {
+                    Name = productViewModel.Name,
+                    Price = productViewModel.Price,
+                    Description = productViewModel.Description,
+                    ImageBytes = byteImage,
+                };
+
+                _repository.Add(product);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Create));
+            }
         }
 
         // POST: RegisterProductsController/Create
@@ -71,7 +93,6 @@ namespace OnlineST.Controllers
         {
             try
             {
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -136,22 +157,14 @@ namespace OnlineST.Controllers
             try
             {
                 Product product = _repository.GetAllData().First(p => p.Id == id);
-
-                return File(product.ImageBytes, $"image{id}.png");
+                FileContentResult fileContentResult= File(product.ImageBytes, "image/png");
+                
+                return fileContentResult;
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
         }
-
-        public IActionResult SaveImage()
-        {
-            //TODO: ver como se usa o input file e como eu jogo o caminho do arquivo para cá
-            return View();
-        }
-
-
-
     }
 }

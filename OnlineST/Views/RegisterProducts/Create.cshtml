@@ -2,14 +2,14 @@
     Layout = "_layout";
 }
 
-@model OnlineST.Models.Product;
+@model OnlineST.Models.ViewModel.ProductViewModel;
 
 <div class="d-flex justify-content-center align-items-center flex-column h-100" style="outline:solid red 5px;">
     <label class="m-4">Novo produto</label>
-    <form class="align-self-center" method="post">
+    <form class="align-self-center" method="post" enctype="multipart/form-data">
         <div class="d-flex flex-column">
 
-            <input type="file" placeholder="Imagem do produto aqui" asp-controller="RegisterProducts" asp-action="SaveImage"/>
+            <input type="file" placeholder="Imagem do produto aqui" asp-for="FormImage" accept=".png, .jpg"/>
 
             <input class="m-2" type="text" placeholder="Nome" asp-for="Name" />
             <input class="m-2" type="text" placeholder="Preço" asp-for="Price" />

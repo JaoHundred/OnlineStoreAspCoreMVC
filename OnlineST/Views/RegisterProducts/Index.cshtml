@@ -1,6 +1,5 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var user = TempData.PeekExt<User>(nameof(User));
@@ -18,7 +17,8 @@
             @*produtos*@
             @{
                 var imageUrl = @Url.Action("ConvertToImageSRC", "RegisterProducts", new { Id = product.Id });
-                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)"/>
+
+                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)" />
             }
 
             @*@if (user.UserType == UserType.None)
@@ -39,7 +39,7 @@
 
     @*botão de adicionar novo produto*@
     @*centralizar o botão(e remover a borda da div depois)*@
-    <div class="container margin10px   border border-5 border-dark">
+    <div class="container margin10px">
 
         <a class=" ConfirmationButton" asp-controller="RegisterProducts" asp-action="Create">
             Novo Produto

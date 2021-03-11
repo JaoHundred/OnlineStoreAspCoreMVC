@@ -5,17 +5,18 @@
 @model OnlineST.Models.ViewModel.ProductViewModel;
 
 <div class="d-flex justify-content-center align-items-center flex-column h-100" style="outline:solid red 5px;">
-    <label class="m-4">Novo produto</label>
+    <h1 class="m-4">Novo produto</h1>
     <form class="align-self-center" method="post" enctype="multipart/form-data">
         <div class="d-flex flex-column">
 
-            <input type="file" placeholder="Imagem do produto aqui" asp-for="FormImage" accept=".png, .jpg"/>
+            <input type="file" placeholder="Imagem do produto aqui" asp-for="FormImage" accept=".png, .jpg"
+                   required="" />
 
-            <input class="m-2" type="text" placeholder="Nome" asp-for="Name" />
-            <input class="m-2" type="text" placeholder="Preço" asp-for="Price" />
-            <textarea class="m-2" style="resize:none"  placeholder="Descrição" asp-for="Description"></textarea>
+            <input class="m-2" type="text" placeholder="Nome" asp-for="Name" required=""/>
+            <input class="m-2" type="text" placeholder="Preço" asp-for="Price" required=""/>
+            <textarea class="m-2" style="resize:none"  placeholder="Descrição" asp-for="Description" required=""></textarea>
 
-            <button class="ConfirmationButton " type="submit" asp-controller="RegisterProducts" asp-action="Register">Registrar</button>
+            <button class="button"  type="submit" asp-controller="RegisterProducts" asp-action="Register">Registrar</button>
         </div>
     </form>
 </div>

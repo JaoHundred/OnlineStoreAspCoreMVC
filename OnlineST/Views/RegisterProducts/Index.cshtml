@@ -18,19 +18,19 @@
             @{
                 var imageUrl = @Url.Action("ConvertToImageSRC", "RegisterProducts", new { Id = product.Id });
 
-                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)" />
+                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)"/>
             }
 
             @*@if (user.UserType == UserType.None)
                 {*@
-            <a class="material-icons FontIcon" asp-controller="RegisterProducts" asp-action="Delete"
+            <a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="RegisterProducts" asp-action="Delete"
                asp-route-Id="@product.Id">delete</a>
             @*}*@
 
             <div class="container">
-                <label class="spacing row center">@product.Name</label>
-                <label class="spacing row">@product.Price</label>
-                <div class="spacing row overflow-auto cardContent">
+                <h4 class="spacing row center marginTop10px">@product.Name</h4>
+                <h5 class="spacing row marginTop10px">R$@product.Price</h5>
+                <div class="spacing row overflow-auto cardContent marginTop10px">
                     <label>@product.Description</label>
                 </div>
             </div>
@@ -41,7 +41,7 @@
     @*centralizar o botão(e remover a borda da div depois)*@
     <div class="container margin10px">
 
-        <a class=" ConfirmationButton" asp-controller="RegisterProducts" asp-action="Create">
+        <a class=" button" asp-controller="RegisterProducts" asp-action="Create">
             Novo Produto
         </a>
     </div>

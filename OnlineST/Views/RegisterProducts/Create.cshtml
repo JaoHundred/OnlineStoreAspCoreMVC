@@ -2,21 +2,33 @@
     Layout = "_layout";
 }
 
+<link href="~/css/CreateProductStyle.css"
+      rel="stylesheet" />
+
 @model OnlineST.Models.ViewModel.ProductViewModel;
 
 <div class="d-flex justify-content-center align-items-center flex-column h-100" style="outline:solid red 5px;">
-    <h1 class="m-4">Novo produto</h1>
     <form class="align-self-center" method="post" enctype="multipart/form-data">
-        <div class="d-flex flex-column">
+        <div class="product-form d-flex flex-column">
+            <h1 class="m-4">Novo produto</h1>
 
-            <input type="file" placeholder="Imagem do produto aqui" asp-for="FormImage" accept=".png, .jpg"
-                   required="" />
+            <div class="fixedFlexColumn">
+                <a class="button buttonSmall end" onclick="ClickInputFile()">Enviar imagem</a>
+                <div class="d-inline-flex overflow-scroll spanContent">
+                    <span id="FileName"></span>
+                </div>
+                <input id="InputFile" type="file" asp-for="FormImage" accept=".png, .jpg"
+                       required="" onchange="UploadImage()" />
+            </div>
 
-            <input class="m-2" type="text" placeholder="Nome" asp-for="Name" required=""/>
-            <input class="m-2" type="text" placeholder="Preço" asp-for="Price" required=""/>
-            <textarea class="m-2" style="resize:none"  placeholder="Descrição" asp-for="Description" required=""></textarea>
 
-            <button class="button"  type="submit" asp-controller="RegisterProducts" asp-action="Register">Registrar</button>
+            <input class="m-2" type="text" placeholder="Nome" asp-for="Name" required="" />
+            <input class="m-2" type="text" placeholder="Preço" asp-for="Price" required="" />
+            <textarea class="m-2" style="resize:none" placeholder="Descrição" asp-for="Description" required=""></textarea>
+
+            <button class="button" type="submit" asp-controller="RegisterProducts" asp-action="Register">Registrar</button>
         </div>
     </form>
 </div>
+
+<script type="text/javascript" src="~/js/site.js"></script>

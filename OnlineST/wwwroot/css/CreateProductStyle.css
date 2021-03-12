@@ -1,3 +1,24 @@
-﻿.product-form{
+﻿.product-form {
+    border: solid medium rgba(0, 172, 248, 0.74);
+    border-radius: 0px 40px 0px 0px;
+    padding: 20px;
+    background-color: whitesmoke;
+    width:350px;
+}
 
+#InputFile {
+    display: none;
+}
+
+.buttonSmall{
+    width: 100px;
+}
+
+.fixedFlexColumn{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:nowrap;
+}
+
+.spanContent {
 }

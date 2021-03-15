@@ -53,6 +53,7 @@ a.nav-link:focus {
 
 .end {
     align-self: end;
+    text-align: center;
 }
 
 input[type=text],

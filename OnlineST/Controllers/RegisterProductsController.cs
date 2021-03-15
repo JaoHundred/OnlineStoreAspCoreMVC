@@ -53,10 +53,16 @@ namespace OnlineST.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    TempData[nameof(ModelState.ErrorCount)] = ModelState.ErrorCount;
+                    return RedirectToAction(nameof(Create));
+                }
+
                 //TODO:colocar o código de extração de extensão em uma classe de utilitário
                 string extensionType = new string(productViewModel.FormImage.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
 
-                if(!(extensionType is "png" or "jpg" or "jpeg"))
+                if (!(extensionType is "png" or "jpg" or "jpeg"))
                     return RedirectToAction(nameof(Create));
 
                 //TODO:colocar o código de conversão de IformFile para bytes em uma classe de utilitário
@@ -157,11 +163,11 @@ namespace OnlineST.Controllers
             try
             {
                 Product product = _repository.GetAllData().First(p => p.Id == id);
-                FileContentResult fileContentResult= File(product.ImageBytes, "image/png");
-                
+                FileContentResult fileContentResult = File(product.ImageBytes, "image/png");
+
                 return fileContentResult;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }

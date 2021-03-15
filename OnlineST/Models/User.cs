@@ -12,6 +12,8 @@ namespace OnlineST.Models
 
         }
 
+        //TODO: criar as funcionalidades de login
+
         public int Id { get; set; }
         public UserType UserType { get; set; } = UserType.None;
         public string Email { get; set; }

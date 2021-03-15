@@ -18,7 +18,7 @@
             @{
                 var imageUrl = @Url.Action("ConvertToImageSRC", "RegisterProducts", new { Id = product.Id });
 
-                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)"/>
+                <img class="spacing img" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)" />
             }
 
             @*@if (user.UserType == UserType.None)
@@ -27,11 +27,13 @@
                asp-route-Id="@product.Id">delete</a>
             @*}*@
 
-            <div class="container">
-                <h4 class="spacing row center marginTop10px">@product.Name</h4>
-                <h5 class="spacing row marginTop10px">R$@product.Price</h5>
-                <div class="spacing row overflow-auto cardContent marginTop10px">
-                    <label>@product.Description</label>
+            <div class="margin5px">
+                <div class="d-flex flex-column">
+                    <h4 class="spacing row marginTop10px center">@product.Name</h4>
+                    <h5 class="spacing row marginTop10px end">R$@product.Price</h5>
+                    <div class="spacing row overflow-auto cardContent marginTop10px">
+                        <label>@product.Description</label>
+                    </div>
                 </div>
             </div>
         </div>

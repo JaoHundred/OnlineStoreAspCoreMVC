@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using OnlineST.Database;
 using OnlineST.Models.ViewModel;
 using System.IO;
+using OnlineST.UTIL;
 
 namespace OnlineST.Controllers
 {
@@ -49,6 +50,7 @@ namespace OnlineST.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([FromForm] ProductViewModel productViewModel)
         {
             try
@@ -59,27 +61,17 @@ namespace OnlineST.Controllers
                     return RedirectToAction(nameof(Create));
                 }
 
-                //TODO:colocar o código de extração de extensão em uma classe de utilitário
-                string extensionType = new string(productViewModel.FormImage.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
+                string extensionType = GetFileExtension(productViewModel.FormImage);
 
                 if (!(extensionType is "png" or "jpg" or "jpeg"))
                     return RedirectToAction(nameof(Create));
 
-                //TODO:colocar o código de conversão de IformFile para bytes em uma classe de utilitário
-                byte[] byteImage;
-                using (var memStream = new MemoryStream())
-                {
-                    await productViewModel.FormImage.CopyToAsync(memStream);
-                    byteImage = memStream.ToArray();
-                }
-
-                //TODO:colocar o código conversão da viewModel para o produto em classe utilitária
                 var product = new Product
                 {
                     Name = productViewModel.Name,
                     Price = productViewModel.Price,
                     Description = productViewModel.Description,
-                    ImageBytes = byteImage,
+                    ImageBytes = await productViewModel.FormImage.ConvertToBytesAsync(),
                 };
 
                 _repository.Add(product);
@@ -90,6 +82,11 @@ namespace OnlineST.Controllers
             {
                 return RedirectToAction(nameof(Create));
             }
+        }
+
+        private string GetFileExtension(IFormFile formFile)
+        {
+            return new string(formFile.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
         }
 
         // POST: RegisterProductsController/Create

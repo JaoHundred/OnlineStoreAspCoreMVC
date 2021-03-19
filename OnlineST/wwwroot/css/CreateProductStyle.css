@@ -1,12 +1,4 @@
-﻿.product-form {
-    border: solid medium rgba(0, 172, 248, 0.74);
-    border-radius: 0px 40px 0px 0px;
-    padding: 20px;
-    background-color: whitesmoke;
-    width:350px;
-}
-
-#InputFile {
+﻿#InputFile {
     display: none;
 }
 

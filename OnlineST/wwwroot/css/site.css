@@ -57,6 +57,8 @@ a.nav-link:focus {
 }
 
 input[type=text],
+input[type=password],
+input[type=email],
 textarea {
     background-color: aliceblue;
     font-weight: 600;
@@ -65,7 +67,17 @@ textarea {
 }
 
     input[type=text]:focus,
+    input[type=password]:focus,
+    input[type=email]:focus,
     textarea:focus {
         outline: none;
         box-shadow: 0px 0px 5px rgb(68, 146, 255);
     }
+
+.form {
+    border: solid medium rgba(0, 172, 248, 0.74);
+    border-radius: 0px 40px 0px 0px;
+    padding: 20px;
+    background-color: whitesmoke;
+    width: 350px;
+}

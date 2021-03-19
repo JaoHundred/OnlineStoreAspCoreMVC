@@ -21,3 +21,9 @@ function UploadImage() {
 
     spanFileName.textContent = inputFile.files[0].name;
 }
+
+
+function DivRadioClick(radioId) {
+    document.getElementById(radioId).checked = true;
+}
+

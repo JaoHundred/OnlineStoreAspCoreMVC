@@ -1,0 +1,7 @@
+﻿.radioDiv{
+    cursor:context-menu;
+}
+
+.radioDiv > input[type=radio]:focus{
+    outline:none;
+}

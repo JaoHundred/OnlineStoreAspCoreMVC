@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewData["Title"] = "Fazer login ou criar conta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/LoginStyle.css" rel="stylesheet" />
+
+@model OnlineST.Models.ViewModel.UserViewModel
+
+<div class="d-flex flex-wrap flex-row gap-3 m-5">
+
+    <form class="form">
+        <h3>Criar conta</h3>
+        <div class="d-flex fixedFlexColumn flex-column gap-3">
+
+            <input class="align-self-center text-center" type="email" placeholder="Email"
+                   asp-for="Email" />
+
+            <input class="align-self-center text-center" type="password" placeholder="Senha"
+                   asp-for="Password" />
+
+            <input class="align-self-center text-center" type="password" placeholder="Confirmar senha"
+                   asp-for="ConfirmPassword" />
+
+            <div class="d-flex flex-row center gap-3">
+                <div class="radioDiv" onclick="DivRadioClick('radioConsumer')">
+                    <input id="radioConsumer" class="margin5px" type="radio" name="name" checked value="@UserType.Consumer" /> 
+                    <label>Consumidor</label>
+                </div>
+                <div class="radioDiv" onclick="DivRadioClick('radioAdmin')">
+                    <input id="radioAdmin" class="margin5px" type="radio" name="name" value="@UserType.Admin" />
+                    <label>Admin</label>
+                </div>
+            </div>
+
+            <button class="button" type="submit" asp-controller="Account" asp-action="CreateAccount">Criar conta</button>
+        </div>
+    </form>
+    <form class="form">
+        <h3>Logar</h3>
+        <div class="d-flex fixedFlexColumn flex-column gap-3 h-100">
+
+            <input class="align-self-center text-center" type="email" placeholder="Email"
+                   asp-for="Email" />
+            <input class="align-self-center text-center" type="password" placeholder="Senha"
+                   asp-for="Password" />
+
+            <button class="button" type="submit" asp-controller="Account" asp-action="Login">Logar</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="~/js/site.js"></script>

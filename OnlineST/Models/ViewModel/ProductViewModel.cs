@@ -26,5 +26,7 @@ namespace OnlineST.Models.ViewModel
 
         [Required]
         public IFormFile FormImage { get; set; }
+
+       
     }
 }

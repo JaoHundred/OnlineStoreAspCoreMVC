@@ -2,15 +2,23 @@
 @{
     ViewData["Title"] = "Fazer login ou criar conta";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var userTypes = new List<OnlineST.Models.ViewModel.SelectedUserTypeViewModel>
+{
+                    new OnlineST.Models.ViewModel.SelectedUserTypeViewModel("Consumidor", UserType.Consumer, isSelected: true),
+                    new OnlineST.Models.ViewModel.SelectedUserTypeViewModel("Administrador", UserType.Admin),
+};
 }
+
 
 <link href="~/css/LoginStyle.css" rel="stylesheet" />
 
 @model OnlineST.Models.ViewModel.UserViewModel
 
-<div class="d-flex flex-wrap flex-row gap-3 m-5">
+<div class="d-flex flex-wrap flex-row marginTop10px gap-3 h-100 w-100 justify-content-center">
 
-    <form class="form">
+    <form class="form" method="post" style="height:400px;">
         <h3>Criar conta</h3>
         <div class="d-flex fixedFlexColumn flex-column gap-3">
 
@@ -24,20 +32,29 @@
                    asp-for="ConfirmPassword" />
 
             <div class="d-flex flex-row center gap-3">
-                <div class="radioDiv" onclick="DivRadioClick('radioConsumer')">
-                    <input id="radioConsumer" class="margin5px" type="radio" name="name" checked value="@UserType.Consumer" /> 
-                    <label>Consumidor</label>
-                </div>
-                <div class="radioDiv" onclick="DivRadioClick('radioAdmin')">
-                    <input id="radioAdmin" class="margin5px" type="radio" name="name" value="@UserType.Admin" />
-                    <label>Admin</label>
-                </div>
+                @foreach (var item in userTypes)
+                {
+                    if (item.IsSelected)
+                    {
+                        <div class="radioDiv" onclick="DivRadioClick('@item.UserTypeName')">
+                            <input checked id="@item.UserTypeName" class="margin5px" type="radio" name="UserType" value="@Convert.ToInt32( UserType.Consumer)" asp-for="SelectedUserType" />
+                            <label>@item.UserTypeName</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="radioDiv" onclick="DivRadioClick('@item.UserTypeName')">
+                            <input id="@item.UserTypeName" class="margin5px" type="radio" name="UserType" value="@Convert.ToInt32( UserType.Admin)" asp-for="SelectedUserType" />
+                            <label>@item.UserTypeName</label>
+                        </div>
+                    }
+                }
             </div>
 
             <button class="button" type="submit" asp-controller="Account" asp-action="CreateAccount">Criar conta</button>
         </div>
     </form>
-    <form class="form">
+    <form class="form" method="post" style="height:400px;">
         <h3>Logar</h3>
         <div class="d-flex fixedFlexColumn flex-column gap-3 h-100">
 

@@ -48,12 +48,27 @@ a.nav-link:focus {
 
 .center {
     align-self: center;
+}
+
+.text-center {
     text-align: center;
 }
 
 .end {
     align-self: end;
     text-align: center;
+}
+
+.margin5px {
+    margin: 5px;
+}
+
+.margin10px {
+    margin: 10px;
+}
+
+.marginTop10px {
+    margin-top: 10px;
 }
 
 input[type=text],

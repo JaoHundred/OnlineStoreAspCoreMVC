@@ -17,12 +17,15 @@ namespace OnlineST.Models
         public int Id { get; set; }
         public UserType UserType { get; set; } = UserType.None;
         public string Email { get; set; }
+        public byte[] PasswordHash { get;  set; }
+        public byte[] PasswordSalt { get;  set; }
+        public int PasswordIterations { get;  set; }
     }
 
     public enum UserType
     {
-        None = 0,
+        None = -1,
+        Consumer = 0,
         Admin = 1,
-        Consumer = 2,
     };
 }

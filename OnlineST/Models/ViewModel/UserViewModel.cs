@@ -8,8 +8,6 @@ namespace OnlineST.Models.ViewModel
 {
     public class UserViewModel
     {
-        public UserType UserType { get; set; } = UserType.None;
-
         [EmailAddress]
         public string Email { get; set; }
         
@@ -18,5 +16,8 @@ namespace OnlineST.Models.ViewModel
         
         [Required]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public UserType SelectedUserType { get; set; }
     }
 }

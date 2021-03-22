@@ -5,17 +5,6 @@
     background-color: rgba(0, 0, 0, 0.17);
 }
 
-.margin5px {
-    margin: 5px;
-}
-
-.margin10px {
-    margin: 10px;
-}
-
-.marginTop10px {
-    margin-top: 10px;
-}
 
 div.card-product {
     display: flex;

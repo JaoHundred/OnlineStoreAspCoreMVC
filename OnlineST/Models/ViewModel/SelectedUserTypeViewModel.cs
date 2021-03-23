@@ -7,7 +7,6 @@ namespace OnlineST.Models.ViewModel
 {
     public class SelectedUserTypeViewModel
     {
-
         public SelectedUserTypeViewModel(string userTypeName, UserType userType, bool isSelected = false)
         {
             UserTypeName = userTypeName;
@@ -17,7 +16,6 @@ namespace OnlineST.Models.ViewModel
 
         public string UserTypeName { get; set; }
         public UserType UserType { get; set; }
-
-        public bool IsSelected { get; set; }
+        public bool IsSelected { get; }
     }
 }

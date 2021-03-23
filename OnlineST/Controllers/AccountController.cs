@@ -22,7 +22,15 @@ namespace OnlineST.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var userViewModel = new UserViewModel
+            {
+                SelectedUserTypes = new List<SelectedUserTypeViewModel>
+                {
+                  new SelectedUserTypeViewModel("Consumidor", UserType.Consumer),
+                  new SelectedUserTypeViewModel("Administrador", UserType.Admin, isSelected:true),
+                },
+            };
+            return View(userViewModel);
         }
 
         [HttpPost]
@@ -50,7 +58,7 @@ namespace OnlineST.Controllers
                         var newUser = new User
                         {
                             Email = userViewModel.Email,
-                            UserType = userViewModel.SelectedUserType,
+                            UserType = (UserType)userViewModel.selectedUserType,
                             PasswordHash = encryptPass,
                             PasswordSalt = salt,
                             PasswordIterations = 10,

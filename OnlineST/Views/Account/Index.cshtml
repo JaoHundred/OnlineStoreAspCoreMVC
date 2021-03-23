@@ -4,11 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
-    var userTypes = new List<OnlineST.Models.ViewModel.SelectedUserTypeViewModel>
-{
-                    new OnlineST.Models.ViewModel.SelectedUserTypeViewModel("Consumidor", UserType.Consumer, isSelected: true),
-                    new OnlineST.Models.ViewModel.SelectedUserTypeViewModel("Administrador", UserType.Admin),
-};
 }
 
 
@@ -32,22 +27,18 @@
                    asp-for="ConfirmPassword" />
 
             <div class="d-flex flex-row center gap-3">
-                @foreach (var item in userTypes)
+                @foreach (var item in Model.SelectedUserTypes)
                 {
-                    if (item.IsSelected)
-                    {
-                        <div class="radioDiv" onclick="DivRadioClick('@item.UserTypeName')">
-                            <input checked id="@item.UserTypeName" class="margin5px" type="radio" name="UserType" value="@Convert.ToInt32( UserType.Consumer)" asp-for="SelectedUserType" />
-                            <label>@item.UserTypeName</label>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="radioDiv" onclick="DivRadioClick('@item.UserTypeName')">
-                            <input id="@item.UserTypeName" class="margin5px" type="radio" name="UserType" value="@Convert.ToInt32( UserType.Admin)" asp-for="SelectedUserType" />
-                            <label>@item.UserTypeName</label>
-                        </div>
-                    }
+                    <div class="radioDiv" onclick="DivRadioClick('@item.UserTypeName')">
+
+                        @*se recusou a funcionar*@
+                        @*<input id="@item.UserTypeName" class="margin5px" type="radio" name="UserType"
+                            asp-for="selectedUserType" value="@item.UserType"/>*@
+
+                        @*funciona, mas a seleção padrão não, descobrir o que é*@
+                        @Html.RadioButtonFor(p => p.selectedUserType, item.UserType, new { id = item.UserTypeName, @checked=item.IsSelected })
+                        <label>@item.UserTypeName</label>
+                    </div>
                 }
             </div>
 

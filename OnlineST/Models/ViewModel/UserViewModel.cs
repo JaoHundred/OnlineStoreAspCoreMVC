@@ -17,10 +17,6 @@ namespace OnlineST.Models.ViewModel
         [Required]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        public int SelectedIndex { get; set; }
-
-        [Required]
         public UserType selectedUserType { get; set; }
 
         public IEnumerable<SelectedUserTypeViewModel> SelectedUserTypes { get; set; }

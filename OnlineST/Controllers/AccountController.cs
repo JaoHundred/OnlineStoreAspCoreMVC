@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnlineST.Services;
 using OnlineST.Repository;
+using OnlineST.UTIL;
 
 namespace OnlineST.Controllers
 {
@@ -37,14 +38,16 @@ namespace OnlineST.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateAccount([FromForm] UserViewModel userViewModel)
         {
-            //TODO: ver como o radiobutton funciona
             try
             {
                 if (!ModelState.IsValid)
+                {
+                    TempData.TryAdd("RegisterError", true);
                     return RedirectToAction(nameof(Index));
+                }
 
                 byte[] password = userViewModel.Password.ToASCIIBytes();
-                byte[] confirmPassword = userViewModel.Password.ToASCIIBytes();
+                byte[] confirmPassword = userViewModel.ConfirmPassword.ToASCIIBytes();
 
                 if (password.SequenceEqual(confirmPassword))
                 {
@@ -58,7 +61,7 @@ namespace OnlineST.Controllers
                         var newUser = new User
                         {
                             Email = userViewModel.Email,
-                            UserType = (UserType)userViewModel.selectedUserType,
+                            UserType = userViewModel.selectedUserType,
                             PasswordHash = encryptPass,
                             PasswordSalt = salt,
                             PasswordIterations = 10,
@@ -66,33 +69,67 @@ namespace OnlineST.Controllers
 
                         repository.Add(newUser);
 
-                        //TODO:avisar que foi cadastrado com sucesso
-
+                        TempData.TryAdd("UserRegistered", true);
+                        return RedirectToAction(nameof(Index));
                     }
 
-
-                    //TODO: avisar que já existe este email acadastrado
+                    TempData.TryAdd("AccountAlreadyExists", true);
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    TempData.TryAdd("ConfirmationDontMatch", true);
+                    return RedirectToAction(nameof(Index));
+                }
+
             }
             catch (Exception ex)
             {
-
+                //TODO:armazenar logo de erros
             }
 
-            return new UnprocessableEntityResult();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login([FromForm] UserViewModel userViewModel)
         {
-            if (!ModelState.IsValid)
+            try
+            {
+                if (!ModelState.IsValid && !string.IsNullOrEmpty(userViewModel.ConfirmPassword))
+                {
+                    TempData.TryAdd("LoginErrorEmptyFields", true);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var user = repository.GetAllData().FirstOrDefault(p => p.Email == userViewModel.Email);
+
+                if (user != null)
+                {
+                    byte[] password = userViewModel.Password.ToASCIIBytes();
+                    byte[] salt = user.PasswordSalt;
+                    byte[] encryptPass = EncryptionService.GenerateHash(password, salt);
+
+                    if (user.PasswordHash.SequenceEqual(encryptPass))
+                    {
+                        //TODO: guardar a seção do usuário e ir para a home
+                        return RedirectPermanent("/Home/Index");
+                    }
+
+                    TempData["IncorrectLogin"] = true;
+                    return RedirectToAction(nameof(Index));
+                }
+
+                TempData["UserDontExist"] = true;
                 return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                //TODO: armazenar logs
+            }
 
-            //TODO:fazer o sistema de login, usar sessões
-
-            return new EmptyResult();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

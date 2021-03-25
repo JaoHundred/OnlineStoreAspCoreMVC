@@ -16,6 +16,7 @@ namespace OnlineST.Database
         {
             var bsonMapper = BsonMapper.Global;
 
+            bsonMapper.Entity<User>().Id(p => p.Id);
             bsonMapper.Entity<Product>().Id(p => p.Id);
 
             string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "database.db");

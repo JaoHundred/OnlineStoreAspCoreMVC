@@ -3,9 +3,11 @@
     ViewData["Title"] = "Fazer login ou criar conta";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-
+    var messageVM = TempData.GetExt<MessageViewModel>(nameof(MessageViewModel));
+    MessageType messageType = messageVM != null ? messageVM.MessageType : MessageType.none;
 }
 
+@using OnlineST.Models.ViewModel;
 
 <link href="~/css/LoginStyle.css" rel="stylesheet" />
 
@@ -33,7 +35,7 @@
 
                         @*se recusou a funcionar*@
                         @*<input id="@item.UserTypeName" class="margin5px" type="radio" name="UserType"
-                    asp-for="selectedUserType" value="@item.UserType"/>*@
+                            asp-for="selectedUserType" value="@item.UserType"/>*@
 
                         @Html.RadioButtonFor(p => p.selectedUserType, item.UserType, new { id = item.UserTypeName, @checked = item.IsSelected })
                         <label>@item.UserTypeName</label>
@@ -41,30 +43,11 @@
                 }
             </div>
 
-            @if (TempData.TryGetValue("UserRegistered", out object userRegistered) && (bool)userRegistered)
-            {
-                <div class="alert alert-success border-success center">
-                    <span>Conta criada com sucesso</span>
-                </div>
-            }
 
-            else if (TempData.TryGetValue("RegisterError", out object registerError) && (bool)registerError)
+            @if (messageVM?.FormType == FormType.CreateAccount)
             {
-                <div class="alert alert-danger border-danger center">
-                    <span>Favor preencher todos os campos</span>
-                </div>
-            }
-
-            else if (TempData.TryGetValue("AccountAlreadyExists", out object accountExists) && (bool)accountExists)
-            {
-                <div class="alert alert-danger border-danger center">
-                    <span>O email @Model.Email já está registrado</span>
-                </div>
-            }
-            else if (TempData.TryGetValue("ConfirmationDontMatch", out object confirmationDontMatch) && (bool)confirmationDontMatch)
-            {
-                <div class="alert alert-danger border-danger center">
-                    <span>Confirmação de senha falhou</span>
+                <div class="alert alert-@messageType border-@messageType center">
+                    <span>@messageVM.Message</span>
                 </div>
             }
 
@@ -80,24 +63,13 @@
             <input class="align-self-center text-center" type="password" placeholder="Senha"
                    asp-for="Password" />
 
-            @if (TempData.TryGetValue("UserDontExist", out object userDontExists) && (bool)userDontExists)
+            @if (messageVM?.FormType == FormType.Login)
             {
-                <div class="alert alert-danger border-danger center">
-                    <span>Usuário para o email registrado não existe</span>
+                <div class="alert alert-@messageType border-@messageType center">
+                    <span>@messageVM.Message</span>
                 </div>
             }
-            else if (TempData.TryGetValue("LoginErrorEmptyFields", out object loginErrorEmptyFields) && (bool)loginErrorEmptyFields)
-            {
-                <div class="alert alert-danger border-danger center">
-                    <span>Favor preencher todos os campos</span>
-                </div>
-            }
-            else if (TempData.TryGetValue("IncorrectLogin", out object incorrectLogin) && (bool)incorrectLogin)
-            {
-                <div class="alert alert-danger border-danger center">
-                    <span>Login incorreto</span>
-                </div>
-            }
+
 
             <button class="button" type="submit" asp-controller="Account" asp-action="Login">Logar</button>
         </div>

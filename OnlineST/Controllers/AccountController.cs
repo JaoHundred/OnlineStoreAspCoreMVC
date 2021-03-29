@@ -40,9 +40,18 @@ namespace OnlineST.Controllers
         {
             try
             {
+                var messageTypeViewModel = new MessageViewModel
+                {
+                    FormType = FormType.CreateAccount,
+                };
+
                 if (!ModelState.IsValid)
                 {
-                    TempData.TryAdd("RegisterError", true);
+                    messageTypeViewModel.Message = "Existem campos não preenchidos";
+                    messageTypeViewModel.MessageType = MessageType.danger;
+
+                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
+                    
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -69,16 +78,29 @@ namespace OnlineST.Controllers
 
                         repository.Add(newUser);
 
-                        TempData.TryAdd("UserRegistered", true);
+                        messageTypeViewModel.Message = "Conta cadastrada com sucesso";
+                        messageTypeViewModel.MessageType = MessageType.success;
+
+                        TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
+
                         return RedirectToAction(nameof(Index));
                     }
 
-                    TempData.TryAdd("AccountAlreadyExists", true);
+                    messageTypeViewModel.Message = "Conta já existe";
+                    messageTypeViewModel.MessageType = MessageType.danger;
+
+                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
+
+                    
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData.TryAdd("ConfirmationDontMatch", true);
+                    messageTypeViewModel.Message = "Confirmação de senha incorreta";
+                    messageTypeViewModel.MessageType = MessageType.success;
+
+                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
+                    
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -97,9 +119,17 @@ namespace OnlineST.Controllers
         {
             try
             {
+                var messageTypeViewModel = new MessageViewModel
+                {
+                    FormType = FormType.Login,
+                };
+
                 if (!ModelState.IsValid && !string.IsNullOrEmpty(userViewModel.ConfirmPassword))
                 {
-                    TempData.TryAdd("LoginErrorEmptyFields", true);
+                    messageTypeViewModel.Message = "Existem campos não preenchidos";
+                    messageTypeViewModel.MessageType = MessageType.danger;
+
+                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -117,11 +147,18 @@ namespace OnlineST.Controllers
                         return RedirectPermanent("/Home/Index");
                     }
 
-                    TempData["IncorrectLogin"] = true;
+                    messageTypeViewModel.Message = "Usuário ou senha errados";
+                    messageTypeViewModel.MessageType = MessageType.danger;
+
+                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
                     return RedirectToAction(nameof(Index));
                 }
 
-                TempData["UserDontExist"] = true;
+                messageTypeViewModel.Message = "Conta não registrada";
+                messageTypeViewModel.MessageType = MessageType.danger;
+
+                TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

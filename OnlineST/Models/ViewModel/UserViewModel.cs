@@ -8,6 +8,7 @@ namespace OnlineST.Models.ViewModel
 {
     public class UserViewModel
     {
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
@@ -16,6 +17,8 @@ namespace OnlineST.Models.ViewModel
 
         [Required]
         public string ConfirmPassword { get; set; }
+
+        public bool RememberMe { get; set; }
 
         public UserType selectedUserType { get; set; }
 

@@ -27,3 +27,12 @@ function DivRadioClick(radioId) {
     document.getElementById(radioId).checked = true;
 }
 
+function DivCheckboxClick(checkId) {
+    const checkBox = document.getElementById(checkId);
+
+    if (checkBox.checked)
+        checkBox.checked = false;
+    else
+        checkBox.checked = true;
+}
+

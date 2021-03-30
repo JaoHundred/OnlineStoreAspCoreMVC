@@ -89,7 +89,10 @@ namespace OnlineST.Controllers
             LogInAccResult accResult = LogInAccResult.None;
             try
             {
-                if (ModelState.IsValid && string.IsNullOrEmpty(userViewModel.ConfirmPassword))
+                //O campo de login não precisa de confirmação de senha
+                ModelState.Remove(nameof(userViewModel.ConfirmPassword));
+                
+                if (ModelState.IsValid)
                     accResult = accountService.Login(userViewModel);
                 else
                     accResult = LogInAccResult.EmptyFields;

@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 using OnlineST.Services;
 using OnlineST.Repository;
 using OnlineST.UTIL;
+using OnlineST.Services.Account;
 
 namespace OnlineST.Controllers
 {
     public class AccountController : Controller
     {
-
-        public AccountController(IBaseRepository<User> repository)
+        public AccountController(IAccountService accountService)
         {
-            this.repository = repository;
+            this.accountService = accountService;
         }
 
-        private readonly IBaseRepository<User> repository;
+        private readonly IAccountService accountService;
 
         public IActionResult Index()
         {
@@ -38,133 +38,84 @@ namespace OnlineST.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateAccount([FromForm] UserViewModel userViewModel)
         {
+            CreateAccResult accResult = CreateAccResult.None;
             try
             {
-                var messageTypeViewModel = new MessageViewModel
-                {
-                    FormType = FormType.CreateAccount,
-                };
-
-                if (!ModelState.IsValid)
-                {
-                    messageTypeViewModel.Message = "Existem campos não preenchidos";
-                    messageTypeViewModel.MessageType = MessageType.danger;
-
-                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-                    
-                    return RedirectToAction(nameof(Index));
-                }
-
-                byte[] password = userViewModel.Password.ToASCIIBytes();
-                byte[] confirmPassword = userViewModel.ConfirmPassword.ToASCIIBytes();
-
-                if (password.SequenceEqual(confirmPassword))
-                {
-                    bool isNewUser = !repository.GetAllData().ToList().Exists(p => p.Email == userViewModel.Email);
-
-                    if (isNewUser)
-                    {
-                        byte[] salt = EncryptionService.GenerateSalt(10);
-                        byte[] encryptPass = EncryptionService.GenerateHash(password, salt);
-
-                        var newUser = new User
-                        {
-                            Email = userViewModel.Email,
-                            UserType = userViewModel.selectedUserType,
-                            PasswordHash = encryptPass,
-                            PasswordSalt = salt,
-                            PasswordIterations = 10,
-                        };
-
-                        repository.Add(newUser);
-
-                        messageTypeViewModel.Message = "Conta cadastrada com sucesso";
-                        messageTypeViewModel.MessageType = MessageType.success;
-
-                        TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-
-                        return RedirectToAction(nameof(Index));
-                    }
-
-                    messageTypeViewModel.Message = "Conta já existe";
-                    messageTypeViewModel.MessageType = MessageType.danger;
-
-                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-
-                    
-                    return RedirectToAction(nameof(Index));
-                }
+                if (ModelState.IsValid)
+                    accResult = accountService.Create(userViewModel);
                 else
-                {
-                    messageTypeViewModel.Message = "Confirmação de senha incorreta";
-                    messageTypeViewModel.MessageType = MessageType.success;
-
-                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-                    
-                    return RedirectToAction(nameof(Index));
-                }
-
+                    accResult = CreateAccResult.EmptyFields;
             }
             catch (Exception ex)
             {
                 //TODO:armazenar logo de erros
             }
 
+            switch (accResult)
+            {
+                case CreateAccResult.AccountCreated:
+                    MessageToView("Conta criada com sucesso", MessageType.success , FormType.CreateAccount);
+                    break;
+                case CreateAccResult.EmptyFields:
+                    MessageToView("Existem campos não preenchidos", MessageType.danger, FormType.CreateAccount);
+                    break;
+                case CreateAccResult.IncorrectData:
+                    MessageToView("Dados incorretos", MessageType.danger, FormType.CreateAccount);
+                    break;
+                case CreateAccResult.None:
+                    MessageToView("Erro desconhecido", MessageType.danger, FormType.CreateAccount);
+                    break;
+            }
+
             return RedirectToAction(nameof(Index));
+        }
+
+        private void MessageToView(string message, MessageType messageType, FormType formType)
+        {
+            var messageTypeViewModel = new MessageViewModel
+            {
+                FormType = formType,
+                Message = message,
+                MessageType = messageType,
+            };
+
+            TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login([FromForm] UserViewModel userViewModel)
         {
+            LogInAccResult accResult = LogInAccResult.None;
             try
             {
-                var messageTypeViewModel = new MessageViewModel
-                {
-                    FormType = FormType.Login,
-                };
-
-                if (!ModelState.IsValid && !string.IsNullOrEmpty(userViewModel.ConfirmPassword))
-                {
-                    messageTypeViewModel.Message = "Existem campos não preenchidos";
-                    messageTypeViewModel.MessageType = MessageType.danger;
-
-                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-                    return RedirectToAction(nameof(Index));
-                }
-
-                var user = repository.GetAllData().FirstOrDefault(p => p.Email == userViewModel.Email);
-
-                if (user != null)
-                {
-                    byte[] password = userViewModel.Password.ToASCIIBytes();
-                    byte[] salt = user.PasswordSalt;
-                    byte[] encryptPass = EncryptionService.GenerateHash(password, salt);
-
-                    if (user.PasswordHash.SequenceEqual(encryptPass))
-                    {
-                        //TODO: guardar a seção do usuário e ir para a home
-                        return RedirectPermanent("/Home/Index");
-                    }
-
-                    messageTypeViewModel.Message = "Usuário ou senha errados";
-                    messageTypeViewModel.MessageType = MessageType.danger;
-
-                    TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-                    return RedirectToAction(nameof(Index));
-                }
-
-                messageTypeViewModel.Message = "Conta não registrada";
-                messageTypeViewModel.MessageType = MessageType.danger;
-
-                TempData.PutExt(nameof(MessageViewModel), messageTypeViewModel);
-
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid && string.IsNullOrEmpty(userViewModel.ConfirmPassword))
+                    accResult = accountService.Login(userViewModel);
+                else
+                    accResult = LogInAccResult.EmptyFields;
             }
             catch (Exception ex)
             {
                 //TODO: armazenar logs
             }
+
+            switch (accResult)
+            {
+                case LogInAccResult.None:
+                    MessageToView("Erro desconhecido", MessageType.danger, FormType.Login);
+                    break;
+                case LogInAccResult.EmptyFields:
+                    MessageToView("Existem campos não preenchidos", MessageType.danger, FormType.Login);
+                    break;
+                case LogInAccResult.IncorrectLogin:
+                    MessageToView("Login incorreto", MessageType.danger, FormType.Login);
+                    break;
+                default:
+                    break;
+            }
+
+            if (accResult == LogInAccResult.LoggedIn)
+                return Redirect("/Home/Index");
 
             return RedirectToAction(nameof(Index));
         }

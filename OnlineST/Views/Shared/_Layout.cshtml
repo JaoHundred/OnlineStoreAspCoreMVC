@@ -24,11 +24,18 @@
                     <a class="nav-link" href="#">Carrinho de compras</a>
                     <a class="nav-link" href="#">conteúdo4</a>
                     <a class="nav-link" href="#">conteúdo5</a>
-                    
 
-                    @*se o usuário estiver logado, não exibir "login"
-                    se ele não estiver logado, não exibir "sair"*@
-                    <a class="nav-link" asp-controller="Account" asp-action="Index">Criar conta/Login</a>
+                    @{
+                        byte[] emailBytes;
+                        Context.Session.TryGetValue(UserSessionConst.Email, out emailBytes);
+                        //TODO: essa view layout não atualiza quando ocorrem requisições pelo site, e se ela não atualiza
+                        //não tem como não mostrar o menu de criar conta/login, pensar o que fazer para esconder
+                        //essa opção do menu quando existir uma sessão
+                        if (emailBytes == null)
+                        {
+                            <a class="nav-link" asp-controller="Account" asp-action="Index">Criar conta/Login</a>
+                        }
+                    }
                     <a class="nav-link" href="#">Sair</a>
                 </div>
             </div>

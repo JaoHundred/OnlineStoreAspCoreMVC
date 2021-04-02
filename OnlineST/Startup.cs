@@ -2,6 +2,7 @@ using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +31,21 @@ namespace OnlineST
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILiteDBContext, LiteDBContext>();
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = consent => true;
+                options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
+            });
+
+            services.Configure<CookieTempDataProviderOptions>(options => 
+            {
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddMemoryCache();
+            services.AddSession();
+
             services.AddControllersWithViews();
 
 #if DEBUG
@@ -53,6 +69,8 @@ namespace OnlineST
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseRouting();
 

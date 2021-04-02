@@ -9,6 +9,7 @@ using OnlineST.Services;
 using OnlineST.Repository;
 using OnlineST.UTIL;
 using OnlineST.Services.Account;
+using Microsoft.AspNetCore.Http;
 
 namespace OnlineST.Controllers
 {
@@ -54,7 +55,7 @@ namespace OnlineST.Controllers
             switch (accResult)
             {
                 case CreateAccResult.AccountCreated:
-                    MessageToView("Conta criada com sucesso", MessageType.success , FormType.CreateAccount);
+                    MessageToView("Conta criada com sucesso", MessageType.success, FormType.CreateAccount);
                     break;
                 case CreateAccResult.EmptyFields:
                     MessageToView("Existem campos não preenchidos", MessageType.danger, FormType.CreateAccount);
@@ -87,13 +88,26 @@ namespace OnlineST.Controllers
         public IActionResult Login([FromForm] UserViewModel userViewModel)
         {
             LogInAccResult accResult = LogInAccResult.None;
+            string email = string.Empty;
             try
             {
                 //O campo de login não precisa de confirmação de senha
                 ModelState.Remove(nameof(userViewModel.ConfirmPassword));
-                
+
                 if (ModelState.IsValid)
-                    accResult = accountService.Login(userViewModel);
+                {
+                    accResult = accountService.Login(userViewModel, out email);
+
+                    //TODO: ver como passar a sessão para a view(preferivel que esconda a opção na navbar de "logar/cadastrar" enquanto o usuário estiver logado
+                    if (accResult == LogInAccResult.LoggedIn)
+                    {
+                        if (userViewModel.RememberMe)
+                            HttpContext.Session.Set(UserSessionConst.Email, Convert.FromBase64String(email));
+
+                        return Redirect("/Home/Index");
+                    }
+
+                }
                 else
                     accResult = LogInAccResult.EmptyFields;
             }
@@ -116,9 +130,6 @@ namespace OnlineST.Controllers
                 default:
                     break;
             }
-
-            if (accResult == LogInAccResult.LoggedIn)
-                return Redirect("/Home/Index");
 
             return RedirectToAction(nameof(Index));
         }

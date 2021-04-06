@@ -10,6 +10,6 @@ namespace OnlineST.Services.Account
     public interface IAccountService
     {
         CreateAccResult Create(UserViewModel userViewModel);
-        LogInAccResult Login(UserViewModel userViewModel, out string email);
+        LogInAccResult Login(UserViewModel userViewModel);
     }
 }

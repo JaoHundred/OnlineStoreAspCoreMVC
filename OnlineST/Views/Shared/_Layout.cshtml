@@ -18,7 +18,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarContainer">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     <a class="nav-link" asp-controller="RegisterProducts" asp-action="Index">Cadastrar produtos</a>
                     <a class="nav-link" href="#">Produtos</a>
                     <a class="nav-link" href="#">Carrinho de compras</a>
@@ -26,17 +26,12 @@
                     <a class="nav-link" href="#">conteúdo5</a>
 
                     @{
-                        byte[] emailBytes;
-                        Context.Session.TryGetValue(UserSessionConst.Email, out emailBytes);
                         //TODO: essa view layout não atualiza quando ocorrem requisições pelo site, e se ela não atualiza
                         //não tem como não mostrar o menu de criar conta/login, pensar o que fazer para esconder
-                        //essa opção do menu quando existir uma sessão
-                        if (emailBytes == null)
-                        {
-                            <a class="nav-link" asp-controller="Account" asp-action="Index">Criar conta/Login</a>
-                        }
+                        //essa opção do menu quando existir uma sessão(isso vai provavelmente ser assunto para o signalR)
+                            <a  class="nav-link" asp-controller="Account" asp-action="Index">Criar conta/Login</a>
                     }
-                    <a class="nav-link" href="#">Sair</a>
+                    <a class="nav-link" asp-controller="Account" asp-action="Logout">Sair</a>
                 </div>
             </div>
         </div>

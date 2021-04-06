@@ -29,10 +29,5 @@ namespace OnlineST.Services
                 return deriveBytes.GetBytes(length);
             }
         }
-
-        public static byte[] ToASCIIBytes(this string password)
-        {
-            return Encoding.ASCII.GetBytes(password);
-        }
     }
 }

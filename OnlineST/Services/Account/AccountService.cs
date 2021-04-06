@@ -50,10 +50,9 @@ namespace OnlineST.Services.Account
             return CreateAccResult.IncorrectData;
         }
 
-        public LogInAccResult Login(UserViewModel userViewModel, out string email)
+        public LogInAccResult Login(UserViewModel userViewModel)
         {
             var user = repository.GetAllData().FirstOrDefault(p => p.Email == userViewModel.Email);
-            email = string.Empty;
 
             if (user != null)
             {
@@ -63,7 +62,6 @@ namespace OnlineST.Services.Account
 
                 if (user.PasswordHash.SequenceEqual(encryptPass))
                 {
-                    email = userViewModel.Email;
                     return LogInAccResult.LoggedIn;
                 }
             }

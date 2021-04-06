@@ -15,24 +15,34 @@ namespace OnlineST.Controllers
 {
     public class AccountController : Controller
     {
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, SessionService sessionService)
         {
             this.accountService = accountService;
+            this.sessionService = sessionService;
         }
 
         private readonly IAccountService accountService;
+        private readonly SessionService sessionService;
 
         public IActionResult Index()
         {
-            var userViewModel = new UserViewModel
+            string session = sessionService.TryGet(UserSessionConst.Email);
+
+            if (string.IsNullOrEmpty(session))
             {
-                SelectedUserTypes = new List<SelectedUserTypeViewModel>
+                var userViewModel = new UserViewModel
                 {
-                  new SelectedUserTypeViewModel("Consumidor", UserType.Consumer),
-                  new SelectedUserTypeViewModel("Administrador", UserType.Admin, isSelected:true),
-                },
-            };
-            return View(userViewModel);
+                    SelectedUserTypes = new List<SelectedUserTypeViewModel>
+                    {
+                        new SelectedUserTypeViewModel("Consumidor", UserType.Consumer),
+                        new SelectedUserTypeViewModel("Administrador", UserType.Admin, isSelected:true),
+                    },
+                };
+
+                return View(userViewModel);
+            }
+
+            return Redirect("/Home/Index");
         }
 
         [HttpPost]
@@ -88,23 +98,24 @@ namespace OnlineST.Controllers
         public IActionResult Login([FromForm] UserViewModel userViewModel)
         {
             LogInAccResult accResult = LogInAccResult.None;
-            string email = string.Empty;
+
             try
             {
                 //O campo de login não precisa de confirmação de senha
                 ModelState.Remove(nameof(userViewModel.ConfirmPassword));
+                ModelState.Remove(nameof(userViewModel.RememberMe));
 
+                //TODO: está dando invalid, ver o que está dando de errado
                 if (ModelState.IsValid)
                 {
-                    accResult = accountService.Login(userViewModel, out email);
+                    accResult = accountService.Login(userViewModel);
 
-                    //TODO: ver como passar a sessão para a view(preferivel que esconda a opção na navbar de "logar/cadastrar" enquanto o usuário estiver logado
                     if (accResult == LogInAccResult.LoggedIn)
                     {
                         if (userViewModel.RememberMe)
-                            HttpContext.Session.Set(UserSessionConst.Email, Convert.FromBase64String(email));
+                            sessionService.Set(UserSessionConst.Email, userViewModel.Email);
 
-                        return Redirect("/Home/Index");
+                        return RedirectToAction(nameof(Index));
                     }
 
                 }
@@ -130,6 +141,13 @@ namespace OnlineST.Controllers
                 default:
                     break;
             }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Logout()
+        {
+            sessionService.Delete();
 
             return RedirectToAction(nameof(Index));
         }

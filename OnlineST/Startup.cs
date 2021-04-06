@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineST.Database;
 using OnlineST.Repository;
+using OnlineST.Services;
 using OnlineST.Services.Account;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace OnlineST
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILiteDBContext, LiteDBContext>();
+            services.AddScoped<SessionService>();
+            services.AddHttpContextAccessor();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -43,9 +46,13 @@ namespace OnlineST
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddMemoryCache();
-            services.AddSession();
+            services.AddSession(options => 
+            {
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromDays(3);
+            });
 
+            services.AddMemoryCache();
             services.AddControllersWithViews();
 
 #if DEBUG

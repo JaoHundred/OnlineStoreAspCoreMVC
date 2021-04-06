@@ -114,6 +114,10 @@ namespace OnlineST.Controllers
                     {
                         if (userViewModel.RememberMe)
                             sessionService.Set(UserSessionConst.Email, userViewModel.Email);
+                        else
+                        {
+                            //TODO:se o usuário não marcar o RememberMe, ver como fazer, uma espécie de sessão que some depois que fecha o site? usar tempdata?
+                        }
 
                         return RedirectToAction(nameof(Index));
                     }

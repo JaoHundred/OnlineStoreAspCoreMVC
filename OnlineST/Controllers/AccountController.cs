@@ -42,7 +42,13 @@ namespace OnlineST.Controllers
                 return View(userViewModel);
             }
 
-            return Redirect("/Home/Index");
+            return RedirectToAction(nameof(UserPainel));
+        }
+
+        public IActionResult UserPainel()
+        {
+            //TODO:montar a view de UserPainel
+            return View();
         }
 
         [HttpPost]
@@ -118,8 +124,7 @@ namespace OnlineST.Controllers
                         {
                             //TODO:se o usuário não marcar o RememberMe, ver como fazer, uma espécie de sessão que some depois que fecha o site? usar tempdata?
                         }
-
-                        return RedirectToAction(nameof(Index));
+                        return Redirect(Url.Action("Index","Home"));
                     }
 
                 }

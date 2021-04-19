@@ -10,6 +10,7 @@ using OnlineST.Repository;
 using OnlineST.UTIL;
 using OnlineST.Services.Account;
 using Microsoft.AspNetCore.Http;
+using OnlineST.Filters;
 
 namespace OnlineST.Controllers
 {
@@ -45,6 +46,7 @@ namespace OnlineST.Controllers
             return RedirectToAction(nameof(UserPainel));
         }
 
+        [AuthorizeUser]
         public IActionResult UserPainel()
         {
             //TODO:montar a view de UserPainel

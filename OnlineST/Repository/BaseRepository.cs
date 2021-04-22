@@ -1,4 +1,5 @@
 ﻿using OnlineST.Database;
+using OnlineST.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace OnlineST.Repository
             _dBContext = dBContext;
         }
 
-        private ILiteDBContext _dBContext;
+        protected ILiteDBContext _dBContext;
 
         public int Add(T data)
         {
@@ -55,5 +56,7 @@ namespace OnlineST.Repository
                 return true;
             }
         }
+
+        
     }
 }

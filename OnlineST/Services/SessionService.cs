@@ -9,9 +9,6 @@ namespace OnlineST.Services
 {
     public class SessionService
     {
-
-        //TODO:sessão não está sendo salva quando passa pelo Set, nenhum erro é disparado
-
         public SessionService(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;

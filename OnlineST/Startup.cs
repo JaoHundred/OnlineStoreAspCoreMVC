@@ -30,9 +30,11 @@ namespace OnlineST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<UserRepository>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILiteDBContext, LiteDBContext>();
             services.AddScoped<SessionService>();
+            services.AddScoped<UserSessionService>();
             services.AddHttpContextAccessor();
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -41,12 +43,12 @@ namespace OnlineST
                 options.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.None;
             });
 
-            services.Configure<CookieTempDataProviderOptions>(options => 
+            services.Configure<CookieTempDataProviderOptions>(options =>
             {
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddSession(options => 
+            services.AddSession(options =>
             {
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromDays(3);
@@ -85,6 +87,10 @@ namespace OnlineST
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

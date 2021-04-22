@@ -16,14 +16,16 @@ namespace OnlineST.Controllers
 {
     public class AccountController : Controller
     {
-        public AccountController(IAccountService accountService, SessionService sessionService)
+        //TODO: fazer funcionalidades de painel/recuperação de senha(assistir um pouco mais da vídeo aula antes)
+
+        public AccountController(IAccountService accountService, UserSessionService sessionService)
         {
             this.accountService = accountService;
             this.sessionService = sessionService;
         }
 
         private readonly IAccountService accountService;
-        private readonly SessionService sessionService;
+        private readonly UserSessionService sessionService;
 
         public IActionResult Index()
         {
@@ -113,20 +115,22 @@ namespace OnlineST.Controllers
                 ModelState.Remove(nameof(userViewModel.ConfirmPassword));
                 ModelState.Remove(nameof(userViewModel.RememberMe));
 
-                //TODO: está dando invalid, ver o que está dando de errado
                 if (ModelState.IsValid)
                 {
                     accResult = accountService.Login(userViewModel);
 
                     if (accResult == LogInAccResult.LoggedIn)
                     {
-                        if (userViewModel.RememberMe)
-                            sessionService.Set(UserSessionConst.Email, userViewModel.Email);
-                        else
-                        {
-                            //TODO:se o usuário não marcar o RememberMe, ver como fazer, uma espécie de sessão que some depois que fecha o site? usar tempdata?
-                        }
-                        return Redirect(Url.Action("Index","Home"));
+                        //TODO:se o usuário não marcar o RememberMe, ver como fazer, uma espécie de sessão que some depois que fecha o site? usar tempdata?
+                        //por hora o rememberme vai ficar desligado
+
+                        //if (userViewModel.RememberMe)
+                        sessionService.Set(UserSessionConst.Email, userViewModel.Email);
+                        //else
+                        //{
+                            
+                        //}
+                        return Redirect(Url.Action("Index", "Home"));
                     }
 
                 }
@@ -158,6 +162,7 @@ namespace OnlineST.Controllers
 
         public IActionResult Logout()
         {
+            TempData.Remove(UserSessionConst.Email);
             sessionService.Delete();
 
             return RedirectToAction(nameof(Index));

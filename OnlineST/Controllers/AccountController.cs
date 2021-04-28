@@ -128,7 +128,7 @@ namespace OnlineST.Controllers
                         sessionService.Set(UserSessionConst.Email, userViewModel.Email);
                         //else
                         //{
-                            
+
                         //}
                         return Redirect(Url.Action("Index", "Home"));
                     }
@@ -162,6 +162,11 @@ namespace OnlineST.Controllers
 
         public IActionResult Logout()
         {
+            User login = sessionService.TryGetUserSession(UserSessionConst.Email);
+
+            if (login == null)
+                return NoContent();
+
             TempData.Remove(UserSessionConst.Email);
             sessionService.Delete();
 

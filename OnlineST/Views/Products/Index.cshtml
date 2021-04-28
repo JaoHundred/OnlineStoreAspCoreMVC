@@ -8,10 +8,10 @@
 
 <link href="~/css/ProductsStyle.css" rel="stylesheet" />
 
-@model IEnumerable<OnlineST.Models.Product>
+@model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
 
 <div class="d-flex flex-row flex-wrap margin5px">
-    @foreach (Product product in Model)
+    @foreach (Product product in Model.Collection)
     {
         <div class="border border-2 card-product margin5px">
             @*produtos*@

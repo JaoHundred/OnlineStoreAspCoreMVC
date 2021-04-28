@@ -1,9 +1,11 @@
 ﻿using OnlineST.Database;
 using OnlineST.Models;
+using OnlineST.Models.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OnlineST.UTIL;
 
 namespace OnlineST.Repository
 {
@@ -29,6 +31,20 @@ namespace OnlineST.Repository
         public bool Update(T data, int id)
         {
             return _dBContext.LiteDatabase.GetCollection<T>().Update(id, data);
+        }
+
+        public PaginatedCollection<T> GetAllData(int pageNumber, int elementsPerPage = 20)
+        {
+            int skip = (pageNumber - 1) * elementsPerPage;
+
+            var result = _dBContext.LiteDatabase.GetCollection<T>()
+                .Query()
+                .Offset(skip)
+                .Limit(elementsPerPage);
+
+            PaginatedCollection<T> collection = result.ToEnumerable().ToPaginationCollection(pageNumber);
+            //TODO: testar esse método quando estiver com mais dados de produtos no banco
+            return collection;
         }
 
         public IEnumerable<T> GetAllData()
@@ -57,6 +73,6 @@ namespace OnlineST.Repository
             }
         }
 
-        
+      
     }
 }

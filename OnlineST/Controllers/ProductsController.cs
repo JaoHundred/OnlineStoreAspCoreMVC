@@ -13,9 +13,11 @@ using System.IO;
 using OnlineST.UTIL;
 using OnlineST.Filters;
 using OnlineST.Services;
+using OnlineST.Models.Pagination;
 
 namespace OnlineST.Controllers
 {
+    [Route("[controller]")]
     public class ProductsController : Controller
     {
         public ProductsController(IBaseRepository<Product> productRepository, UserSessionService userSessionService)
@@ -28,14 +30,18 @@ namespace OnlineST.Controllers
         private readonly UserSessionService _userSessionService;
 
         // GET: RegisterProductsController
-        public ActionResult Index()
+        [HttpGet]
+        [Route("Page/{page?}")]
+        public ActionResult Index(int? page)
         {
+            //TODO:ao clicar nos componentes de paginação(a fazer) chamar o index e passar o número correto da página
+
             User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
 
             if (user != null)
                 TempData.PutExt(UserSessionConst.Email, user);
 
-            var products = _productrepository.GetAllData();
+            PaginatedCollection<Product> products = _productrepository.GetAllData(page ?? 1);
 
             return View(products);
         }
@@ -161,6 +167,7 @@ namespace OnlineST.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult ConvertToImageSRC(int id)
         {
             try

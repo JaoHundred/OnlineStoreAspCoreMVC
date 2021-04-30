@@ -17,42 +17,33 @@ using OnlineST.Models.Pagination;
 
 namespace OnlineST.Controllers
 {
-    [Route("[controller]")]
     public class ProductsController : Controller
     {
-        public ProductsController(IBaseRepository<Product> productRepository, UserSessionService userSessionService)
+        public ProductsController(IBaseRepository<Product> productRepository)
         {
-            _productrepository = productRepository;
-            _userSessionService = userSessionService;
+            _productRepository = productRepository;
         }
 
-        private readonly IBaseRepository<Product> _productrepository;
-        private readonly UserSessionService _userSessionService;
+        private readonly IBaseRepository<Product> _productRepository;
 
-        // GET: RegisterProductsController
         [HttpGet]
-        [Route("Page/{page?}")]
-        public ActionResult Index(int? page)
+        [Route("/Page/{page?}")]
+        public async Task<IActionResult> Index(int? page)
         {
             //TODO:ao clicar nos componentes de paginação(a fazer) chamar o index e passar o número correto da página
 
-            User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
-
-            if (user != null)
-                TempData.PutExt(UserSessionConst.Email, user);
-
-            PaginatedCollection<Product> products = _productrepository.GetAllData(page ?? 1);
+            PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 10);
 
             return View(products);
         }
 
         // GET: RegisterProductsController/Details/5
+        [Route(nameof(Details))]
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: RegisterProductsController/Create
         [AuthorizeUserAdmin]
         public ActionResult Create()
         {
@@ -85,7 +76,7 @@ namespace OnlineST.Controllers
                     ImageBytes = await productViewModel.FormImage.ConvertToBytesAsync(),
                 };
 
-                _productrepository.Add(product);
+                _productRepository.Add(product);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -100,86 +91,48 @@ namespace OnlineST.Controllers
             return new string(formFile.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
         }
 
-        // POST: RegisterProductsController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: RegisterProductsController/Edit/5
+        [AuthorizeUserAdmin]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: RegisterProductsController/Edit/5
+
+        //TODO:ValidateAntiForgeryToken só funciona com post, procurar se é possível fazer um post sem forms method post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RegisterProductsController/Delete/5
         [AuthorizeUserAdmin]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             try
             {
-                _productrepository.Delete(id);
+                _productRepository.Delete(id);
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View();
+                return BadRequest(ex);
             }
         }
 
-        // POST: RegisterProductsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpGet]
+        [Route("/img/{name}")]
+        [Route(nameof(ConvertToImageSRC))]
         public IActionResult ConvertToImageSRC(int id)
         {
             try
             {
-                Product product = _productrepository.GetAllData().First(p => p.Id == id);
+                Product product = _productRepository.FindData(id);
                 FileContentResult fileContentResult = File(product.ImageBytes, "image/png");
 
                 return fileContentResult;
             }
             catch (Exception ex)
             {
-                return View();
+                return BadRequest(ex);
             }
         }
     }

@@ -19,13 +19,13 @@ namespace OnlineST.Filters
         {
             var sessionService = context.HttpContext.RequestServices.GetService(typeof(SessionService)) as SessionService;
 
-            string session = sessionService.TryGet(UserSessionConst.Email);
+            string email = sessionService.TryGet(UserSessionConst.Email);
 
-            if (!string.IsNullOrEmpty(session))
+            if (!string.IsNullOrEmpty(email))
             {
                 var database = context.HttpContext.RequestServices.GetService(typeof(Repository.UserRepository)) as Repository.UserRepository;
 
-                User user = database.Find(session);
+                User user = database.Find(email);
 
                 if (user?.UserType == UserType.Consumer)
                     context.Result = new RedirectResult("Index");

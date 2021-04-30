@@ -33,23 +33,34 @@ namespace OnlineST.Repository
             return _dBContext.LiteDatabase.GetCollection<T>().Update(id, data);
         }
 
-        public PaginatedCollection<T> GetAllData(int pageNumber, int elementsPerPage = 20)
+        public async Task<PaginatedCollection<T>> GetAllDataAsync(int pageNumber, int elementsPerPage = 20)
         {
             int skip = (pageNumber - 1) * elementsPerPage;
 
-            var result = _dBContext.LiteDatabase.GetCollection<T>()
+            var task = Task.Run(() =>
+            {
+                return _dBContext.LiteDatabase
+                .GetCollection<T>()
                 .Query()
                 .Offset(skip)
                 .Limit(elementsPerPage);
+            });
+
+            var result = await task;
 
             PaginatedCollection<T> collection = result.ToEnumerable().ToPaginationCollection(pageNumber);
             //TODO: testar esse método quando estiver com mais dados de produtos no banco
             return collection;
         }
 
-        public IEnumerable<T> GetAllData()
+        public async Task<IEnumerable<T>> GetAllDataAsync()
         {
-            return _dBContext.LiteDatabase.GetCollection<T>().FindAll();
+            var task = Task.Run(() =>
+            {
+                return _dBContext.LiteDatabase.GetCollection<T>().FindAll();
+            });
+
+            return await task;
         }
 
         public T FindData(int id)
@@ -59,7 +70,7 @@ namespace OnlineST.Repository
 
         public bool Upsert(T data, int id)
         {
-           var obj = FindData(id);
+            var obj = FindData(id);
 
             if (obj == null)
             {
@@ -73,6 +84,6 @@ namespace OnlineST.Repository
             }
         }
 
-      
+
     }
 }

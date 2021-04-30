@@ -2,11 +2,13 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var user = TempData.PeekExt<User>(UserSessionConst.Email);
+
+   User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
 
 }
 
 <link href="~/css/ProductsStyle.css" rel="stylesheet" />
+@inject OnlineST.Services.UserSessionService _userSessionService
 
 @model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
 
@@ -18,14 +20,13 @@
             @{
                 var imageUrl = @Url.Action("ConvertToImageSRC", "Products", new { Id = product.Id });
 
-
-                <img class="border border-3 border-color spacing img border-radius" src="@imageUrl" alt="@string.Format("image{0}.png", product.Id)" />
+                <img class="border border-3 border-color spacing img border-radius" src="@imageUrl" alt="@string.Format("{0}.png", product.Name)" />
             }
 
             @if (user?.UserType == UserType.Admin)
             {
                 <a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
-                   asp-route-Id="@product.Id">delete</a>
+                   asp-route-Id="@product.Id" >delete</a>
             }
 
             <div class="margin5px">

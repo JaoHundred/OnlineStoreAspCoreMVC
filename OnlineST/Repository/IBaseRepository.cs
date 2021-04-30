@@ -17,9 +17,9 @@ namespace OnlineST.Repository
 
         bool Upsert(T data, int id);
 
-        PaginatedCollection<T> GetAllData(int pageNumber, int elementsPerPage = 20);
+        Task<PaginatedCollection<T>> GetAllDataAsync(int pageNumber, int elementsPerPage = 20);
 
-        IEnumerable<T> GetAllData();
+        Task<IEnumerable<T>> GetAllDataAsync();
 
         T FindData(int id);
     }

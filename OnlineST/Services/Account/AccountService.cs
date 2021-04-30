@@ -11,12 +11,12 @@ namespace OnlineST.Services.Account
 {
     public class AccountService : IAccountService
     {
-        public AccountService(IBaseRepository<User> repository)
+        public AccountService(UserRepository repository)
         {
             this.repository = repository;
         }
 
-        private readonly IBaseRepository<User> repository;
+        private readonly UserRepository repository;
 
         public CreateAccResult Create(UserViewModel userViewModel)
         {
@@ -25,14 +25,14 @@ namespace OnlineST.Services.Account
 
             if (password.SequenceEqual(confirmPassword))
             {
-                bool isNewUser = !repository.GetAllData().ToList().Exists(p => p.Email == userViewModel.Email);
+                User user = repository.Find(userViewModel.Email);
 
-                if (isNewUser)
+                if (user is null)
                 {
                     byte[] salt = EncryptionService.GenerateSalt(10);
                     byte[] encryptPass = EncryptionService.GenerateHash(password, salt);
 
-                    var newUser = new User
+                    user = new User
                     {
                         Email = userViewModel.Email,
                         UserType = userViewModel.selectedUserType,
@@ -41,7 +41,7 @@ namespace OnlineST.Services.Account
                         PasswordIterations = 10,
                     };
 
-                    repository.Add(newUser);
+                    repository.Add(user);
 
                     return CreateAccResult.AccountCreated;
                 }
@@ -52,9 +52,9 @@ namespace OnlineST.Services.Account
 
         public LogInAccResult Login(UserViewModel userViewModel)
         {
-            var user = repository.GetAllData().FirstOrDefault(p => p.Email == userViewModel.Email);
+            User user = repository.Find(userViewModel.Email);
 
-            if (user != null)
+            if (user is not null)
             {
                 byte[] password = userViewModel.Password.ToASCIIBytes();
                 byte[] salt = user.PasswordSalt;

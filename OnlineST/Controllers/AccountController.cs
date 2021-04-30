@@ -167,7 +167,6 @@ namespace OnlineST.Controllers
             if (login == null)
                 return NoContent();
 
-            TempData.Remove(UserSessionConst.Email);
             sessionService.Delete();
 
             return RedirectToAction(nameof(Index));

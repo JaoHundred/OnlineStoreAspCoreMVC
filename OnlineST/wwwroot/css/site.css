@@ -41,6 +41,20 @@ a.nav-link:focus {
         cursor: context-menu;
     }
 
+.formIconButton {
+    background-color:transparent;
+    cursor:context-menu;
+        border: none;
+        font-size: 12px;
+        padding: 5px;
+}
+
+.formIconButton:hover,
+.formIconButton:focus {
+    color: blue;
+    cursor: context-menu;
+    outline:none;
+}
 
 .spacing {
     margin: 2px;
@@ -96,3 +110,5 @@ textarea {
     background-color: whitesmoke;
     width: 350px;
 }
+
+

@@ -31,6 +31,7 @@ namespace OnlineST.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             //TODO:ao clicar nos componentes de paginação(a fazer) chamar o index e passar o número correto da página
+            //TODO:criar viewComponent(?) de paginação
 
             PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 10);
 
@@ -92,7 +93,7 @@ namespace OnlineST.Controllers
         }
 
 
-        // GET: RegisterProductsController/Edit/5
+        [HttpPost]
         [AuthorizeUserAdmin]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id)
@@ -101,7 +102,6 @@ namespace OnlineST.Controllers
         }
 
 
-        //TODO:ValidateAntiForgeryToken só funciona com post, procurar se é possível fazer um post sem forms method post
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeUserAdmin]

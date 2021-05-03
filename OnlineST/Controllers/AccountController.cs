@@ -160,6 +160,8 @@ namespace OnlineST.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //TODO:pesquisar para saber se logout precisa ser passado como post
+
         public IActionResult Logout()
         {
             User login = sessionService.TryGetUserSession(UserSessionConst.Email);

@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
-   User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
+    User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
 
 }
 
@@ -25,8 +25,14 @@
 
             @if (user?.UserType == UserType.Admin)
             {
-                <a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
-                   asp-route-Id="@product.Id" >delete</a>
+                <form class="align-self-end" method="post">
+                    <button class="formIconButton FontIcon material-icons marginTop10px " type="submit"
+                            asp-controller="Products" asp-action="Delete" asp-route-Id="@product.Id">
+                        delete
+                    </button>
+                </form>
+                @*<a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
+                    asp-route-Id="@product.Id" >delete</a>*@
             }
 
             <div class="margin5px">
@@ -51,6 +57,8 @@
                 Novo Produto
             </a>
         </div>
+
+        
     }
 </div>
 

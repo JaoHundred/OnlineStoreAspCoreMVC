@@ -30,10 +30,9 @@ namespace OnlineST.Controllers
         [Route("/Page/{page?}")]
         public async Task<IActionResult> Index(int? page)
         {
-            //TODO:ao clicar nos componentes de paginação(a fazer) chamar o index e passar o número correto da página
-            //TODO:criar viewComponent(?) de paginação
+            //TODO: continuar vendo as vídeos aulas
 
-            PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 10);
+            PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 5);
 
             return View(products);
         }

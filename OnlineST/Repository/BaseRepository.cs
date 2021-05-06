@@ -46,9 +46,11 @@ namespace OnlineST.Repository
                 .Limit(elementsPerPage);
             });
 
+            int elementsCount = _dBContext.LiteDatabase.GetCollection<T>().Count();
+            
             var result = await task;
 
-            PaginatedCollection<T> collection = result.ToEnumerable().ToPaginationCollection(pageNumber);
+            PaginatedCollection<T> collection = result.ToEnumerable().ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
             //TODO: testar esse método quando estiver com mais dados de produtos no banco
             return collection;
         }

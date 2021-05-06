@@ -8,9 +8,9 @@ namespace OnlineST.UTIL
 {
     public static class PaginationExtension
     {
-        public static PaginatedCollection<T> ToPaginationCollection<T>(this IEnumerable<T> collection, int pageNumber)
+        public static PaginatedCollection<T> ToPaginationCollection<T>(this IEnumerable<T> collection, int totalElements, int pageNumber, int pageSize)
         {
-            return new PaginatedCollection<T>(collection, pageNumber);
+            return new PaginatedCollection<T>(collection, totalElements, pageNumber, pageSize);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace OnlineST.Repository
 
         bool Update(T data, int id);
 
-        bool Upsert(T data, int id);
+        bool Upsert(T data);
 
         Task<PaginatedCollection<T>> GetAllDataAsync(int pageNumber, int elementsPerPage = 20);
 

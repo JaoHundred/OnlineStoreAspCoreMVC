@@ -25,11 +25,28 @@
 
             @if (user?.UserType == UserType.Admin)
             {
-                <form class="align-self-end" method="post">
-                    <button class="formIconButton FontIcon material-icons marginTop10px " type="submit"
-                            asp-controller="Products" asp-action="Delete" asp-route-Id="@product.Id">
-                        delete
-                    </button>
+                <form method="post">
+                    <div class="w-100 d-grid">
+
+                        <div class="row">
+
+                            <div class="col ">
+
+                                <button class=" formIconButton FontIcon material-icons marginTop10px " type="submit"
+                                        asp-controller="Products" asp-action="Product" asp-route-Id="@product.Id">
+                                    edit
+                                </button>
+                            </div>
+
+                            <div class="col-auto">
+
+                                <button class="formIconButton FontIcon material-icons marginTop10px " type="submit"
+                                        asp-controller="Products" asp-action="Delete" asp-route-Id="@product.Id">
+                                    delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </form>
                 @*<a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
                     asp-route-Id="@product.Id" >delete</a>*@
@@ -53,7 +70,7 @@
         @*centralizar o botão(e remover a borda da div depois)*@
         <div class="container margin10px">
 
-            <a class=" button" asp-controller="Products" asp-action="Create">
+            <a class=" button" asp-controller="Products" asp-action="Product">
                 Novo Produto
             </a>
         </div>

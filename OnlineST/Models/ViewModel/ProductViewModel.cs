@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using OnlineST.UTIL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +28,18 @@ namespace OnlineST.Models.ViewModel
         [Required]
         public IFormFile FormImage { get; set; }
 
-       
+
+        public async Task<Product> ToProductAsync()
+        {
+            return new Product
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Price = this.Price,
+                Amount = this.Amount,
+                Description = this.Description,
+                ImageBytes = await this.FormImage.ConvertToBytesAsync(),
+            };
+        }
     }
 }

@@ -44,45 +44,82 @@ namespace OnlineST.Controllers
             return View();
         }
 
+        [HttpGet]
         [AuthorizeUserAdmin]
-        public ActionResult Create()
+        public IActionResult Product()
         {
             return View();
         }
 
         [HttpPost]
         [AuthorizeUserAdmin]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult Product(int id)
+        {
+            Product product = _productRepository.FindData(id);
+
+            if (product != null)
+            {
+                var productViewModel = new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Amount = product.Amount,
+                    Description = product.Description,
+                };
+
+                using (var stream = new MemoryStream(product.ImageBytes))
+                {
+                    productViewModel.FormImage = new FormFile(stream, 0, stream.Length, "name", product.Name);
+                }
+
+                return View(productViewModel);
+            }
+
+            return NoContent();
+
+        }
+
+        [HttpPost]
+        [AuthorizeUserAdmin]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([FromForm] ProductViewModel productViewModel)
+        public IActionResult Edit(int id)
+        {
+            return RedirectToAction(nameof(Product), id);
+        }
+
+        [HttpPost]
+        [AuthorizeUserAdmin]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Save([FromForm] ProductViewModel productViewModel)
         {
             try
             {
+                //TODO: ver como passar o Iformimage para o asp-for do product.cshtml
+
+                ModelState.Remove(nameof(productViewModel.Id));
+
                 if (!ModelState.IsValid)
                 {
                     TempData[nameof(ModelState.ErrorCount)] = ModelState.ErrorCount;
-                    return RedirectToAction(nameof(Create));
+                    return RedirectToAction(nameof(Product));
                 }
 
                 string extensionType = GetFileExtension(productViewModel.FormImage);
 
                 if (!(extensionType is "png" or "jpg" or "jpeg"))
-                    return RedirectToAction(nameof(Create));
+                    return RedirectToAction(nameof(Product));
 
-                var product = new Product
-                {
-                    Name = productViewModel.Name,
-                    Price = productViewModel.Price,
-                    Description = productViewModel.Description,
-                    ImageBytes = await productViewModel.FormImage.ConvertToBytesAsync(),
-                };
+                var product = await productViewModel.ToProductAsync();
 
-                _productRepository.Add(product);
+                _productRepository.Upsert(product);
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
             {
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Product));
             }
         }
 
@@ -90,16 +127,6 @@ namespace OnlineST.Controllers
         {
             return new string(formFile.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
         }
-
-
-        [HttpPost]
-        [AuthorizeUserAdmin]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

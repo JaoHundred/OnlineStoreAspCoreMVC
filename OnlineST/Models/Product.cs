@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OnlineST.Models
 {
-    public class Product
+    public class Product : IPersistableObject
     {
         public Product()
         {

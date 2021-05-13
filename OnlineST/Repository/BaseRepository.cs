@@ -9,7 +9,7 @@ using OnlineST.UTIL;
 
 namespace OnlineST.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T>
+    public class BaseRepository<T> : IBaseRepository<T> where T : IPersistableObject
     {
         public BaseRepository(ILiteDBContext dBContext)
         {
@@ -47,7 +47,7 @@ namespace OnlineST.Repository
             });
 
             int elementsCount = _dBContext.LiteDatabase.GetCollection<T>().Count();
-            
+
             var result = await task;
 
             PaginatedCollection<T> collection = result.ToEnumerable().ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
@@ -70,22 +70,23 @@ namespace OnlineST.Repository
             return _dBContext.LiteDatabase.GetCollection<T>().FindById(id);
         }
 
-        public bool Upsert(T data, int id)
+        public bool Upsert(T data)
         {
-            var obj = FindData(id);
+            int count = _dBContext.LiteDatabase.GetCollection<T>().Count(p => p.Id == data.Id);
 
-            if (obj == null)
+            if(count > 0)
+            {
+                Update(data, data.Id);
+                return true;
+            }
+            else if(count == 0)
             {
                 Add(data);
                 return true;
             }
-            else
-            {
-                Update(data, id);
-                return true;
-            }
+
+            return false;
+           
         }
-
-
     }
 }

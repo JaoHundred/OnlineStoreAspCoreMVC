@@ -14,6 +14,8 @@ using OnlineST.UTIL;
 using OnlineST.Filters;
 using OnlineST.Services;
 using OnlineST.Models.Pagination;
+using OnlineST.Models.ViewModel.Modal;
+using System.Text.Json;
 
 namespace OnlineST.Controllers
 {
@@ -128,11 +130,34 @@ namespace OnlineST.Controllers
             return new string(formFile.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
         }
 
+
+        [HttpGet]
+        //este método é chamado no modal
+        public IActionResult Delete(int id)
+        {
+            var product = _productRepository.FindData(id);
+
+            if (product is null)
+                return StatusCode(204);
+
+            var modalViewModel =new ModalViewModel
+            {
+                Controller = nameof(ProductsController),
+                Action = nameof(ConfirmDelete),
+                Title = "Um item será deletado, deseja continuar?",
+                Message = $"Deseja deletar {product.Name}?",
+                Id = id,
+            };
+
+            return new JsonResult(modalViewModel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeUserAdmin]
-        public IActionResult Delete(int id)
+        public IActionResult ConfirmDelete(int id)
         {
+            //TODO: ver como montar o formaction a partir do javascript
             try
             {
                 _productRepository.Delete(id);

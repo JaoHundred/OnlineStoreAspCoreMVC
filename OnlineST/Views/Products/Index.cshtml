@@ -9,8 +9,12 @@
 
 <link href="~/css/ProductsStyle.css" rel="stylesheet" />
 @inject OnlineST.Services.UserSessionService _userSessionService
+@inject OnlineST.Repository.IBaseRepository<Product> _productRepository
 
 @model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
+@using OnlineST.Models.ViewModel.Modal
+
+<input type="hidden" id="SelectedProductIndex" />
 
 <div class="d-flex flex-row flex-wrap margin5px">
     @foreach (Product product in Model.Collection)
@@ -40,8 +44,10 @@
 
                             <div class="col-auto">
 
-                                <button class="formIconButton FontIcon material-icons marginTop10px " type="submit"
-                                        asp-controller="Products" asp-action="Delete" asp-route-Id="@product.Id">
+                                @*data-bs-toggle="modal" data-bs-target="#modalDialog"*@
+
+                                <button type="button" class="formIconButton FontIcon material-icons marginTop10px "
+                                        onclick="CreateModal('modalDialog','Products','Delete','@product.Id')">
                                     delete
                                 </button>
                             </div>
@@ -80,6 +86,39 @@
 
 @await Component.InvokeAsync("Pagination", Model)
 
+<!-- Modal -->
+<div class="modal fade" id="modalDialog" tabindex="-1" aria-labelledby="modalDialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDialog">
+                    <label id="labelTitle"></label>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label id="labelMessageBody"></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modalConfirmDelete" >
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+@functions
+{
+
+    public ModalViewModel ModalData()
+    {
+        return TempData.GetExt<ModalViewModel>(nameof(ModalViewModel));
+    }
+}
+
+
+
+<script type="text/javascript" src="~/js/ModalManager.js"></script>
 

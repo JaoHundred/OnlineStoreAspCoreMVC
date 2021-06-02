@@ -135,6 +135,11 @@ namespace OnlineST.Controllers
         //este método é chamado no modal
         public IActionResult Delete(int id)
         {
+
+            //TODO: na página 1 o modal de deletar funciona ( caminho: page/ )
+            //na página 2 em diante, não (caminho: page/2/ )
+            //verificar como o href ou formaction é montado em páginas que não terminam com page/
+
             var product = _productRepository.FindData(id);
 
             if (product is null)
@@ -157,7 +162,6 @@ namespace OnlineST.Controllers
         [AuthorizeUserAdmin]
         public IActionResult ConfirmDelete(int id)
         {
-            //TODO: ver como montar o formaction a partir do javascript
             try
             {
                 _productRepository.Delete(id);

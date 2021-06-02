@@ -8,11 +8,9 @@
     document.getElementById('labelTitle').innerHTML = modalViewModel.title;
     document.getElementById('labelMessageBody').innerHTML = modalViewModel.message;
 
-    const selectedIndex = document.getElementById('SelectedProductIndex').value;
     const modalConfirmDeleteButton = document.getElementById('modalConfirmDelete');
 
-    modalConfirmDeleteButton.formaction = `/${modalViewModel.controller}/${modalViewModel.action}/${selectedIndex}`;
-    document.getElementById('SelectedProductIndex').value = paramId;
+    modalConfirmDeleteButton.setAttribute('formaction', `/${modalViewModel.controller}/${modalViewModel.action}/${paramId}`);
 
     bootstrapModal.show();
 }

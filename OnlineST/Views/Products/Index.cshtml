@@ -14,7 +14,6 @@
 @model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
 @using OnlineST.Models.ViewModel.Modal
 
-<input type="hidden" id="SelectedProductIndex" />
 
 <div class="d-flex flex-row flex-wrap margin5px">
     @foreach (Product product in Model.Collection)
@@ -100,9 +99,11 @@
                 <label id="labelMessageBody"></label>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="modalConfirmDelete" >
-                    Confirmar
-                </button>
+                <form method="post">
+                    <button type="submit" class="btn btn-primary" id="modalConfirmDelete">
+                        Confirmar
+                    </button>
+                </form>
             </div>
         </div>
     </div>

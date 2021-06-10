@@ -32,8 +32,6 @@ namespace OnlineST.Controllers
         [Route("/Page/{page?}")]
         public async Task<IActionResult> Index(int? page)
         {
-            //TODO: continuar vendo as vídeos aulas
-
             PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 5);
 
             return View(products);
@@ -128,33 +126,6 @@ namespace OnlineST.Controllers
         private string GetFileExtension(IFormFile formFile)
         {
             return new string(formFile.ContentType.Reverse().TakeWhile(p => p is not '/').Reverse().ToArray());
-        }
-
-
-        [HttpGet]
-        //este método é chamado no modal
-        public IActionResult Delete(int id)
-        {
-
-            //TODO: na página 1 o modal de deletar funciona ( caminho: page/ )
-            //na página 2 em diante, não (caminho: page/2/ )
-            //verificar como o href ou formaction é montado em páginas que não terminam com page/
-
-            var product = _productRepository.FindData(id);
-
-            if (product is null)
-                return StatusCode(204);
-
-            var modalViewModel =new ModalViewModel
-            {
-                Controller = nameof(ProductsController),
-                Action = nameof(ConfirmDelete),
-                Title = "Um item será deletado, deseja continuar?",
-                Message = $"Deseja deletar {product.Name}?",
-                Id = id,
-            };
-
-            return new JsonResult(modalViewModel);
         }
 
         [HttpPost]

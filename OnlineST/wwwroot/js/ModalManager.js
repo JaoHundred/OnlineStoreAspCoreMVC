@@ -1,6 +1,6 @@
 ﻿async function CreateModal(modalId, controller, action, paramId) {
 
-    const response = await fetch(`${controller}/${action}/${paramId}`);
+    const response = await fetch(`/${controller}/${action}/${paramId}`);
     const modalViewModel = await response.json();
 
     const bootstrapModal = new bootstrap.Modal(document.getElementById(modalId));

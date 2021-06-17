@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
-    User user = _userSessionService.TryGetUserSession(UserSessionConst.Email);
+    User user = _userSessionService.TryGetUserSessionByEmail();
 
 }
 
@@ -26,12 +26,21 @@
                 <img class="border border-3 border-color spacing img border-radius" src="@imageUrl" alt="@string.Format("{0}.png", product.Name)" />
             }
 
-            @if (user?.UserType == UserType.Admin)
-            {
-                <form method="post">
-                    <div class="w-100 d-grid">
+            <form method="post">
 
-                        <div class="row">
+                <div class="w-100 d-grid">
+                    <div class="row">
+
+                        <div class="col ">
+
+                            <button class=" formIconButton FontIcon material-icons marginTop10px " type="submit"
+                                    asp-controller="Products" asp-action="AddToShoppingCart" asp-route-Id="@product.Id">
+                                shopping_cart
+                            </button>
+                        </div>
+
+                        @if (user?.UserType == UserType.Admin)
+                        {
 
                             <div class="col ">
 
@@ -50,12 +59,14 @@
                                     delete
                                 </button>
                             </div>
-                        </div>
+                            @*<a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
+                                asp-route-Id="@product.Id" >delete</a>*@
+                        }
                     </div>
-                </form>
-                @*<a class="material-icons FontIcon marginTop10px align-self-end" asp-controller="Products" asp-action="Delete"
-                    asp-route-Id="@product.Id" >delete</a>*@
-            }
+                </div>
+            </form>
+
+
 
             <div class="margin5px">
                 <div class="d-flex flex-column">

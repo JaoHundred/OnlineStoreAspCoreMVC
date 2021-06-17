@@ -164,7 +164,7 @@ namespace OnlineST.Controllers
 
         public IActionResult Logout()
         {
-            User login = sessionService.TryGetUserSession(UserSessionConst.Email);
+            User login = sessionService.TryGetUserSessionByEmail();
 
             if (login == null)
                 return NoContent();

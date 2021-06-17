@@ -31,6 +31,7 @@ namespace OnlineST
         {
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<UserRepository>();
+            services.AddScoped<CartProductRepository>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ILiteDBContext, LiteDBContext>();
             services.AddScoped<SessionService>();

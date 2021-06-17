@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OnlineST.Models;
 using OnlineST.Repository;
+using OnlineST.UTIL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace OnlineST.Services
 
         private readonly UserRepository _repository;
 
-        public User TryGetUserSession(string emailKey)
+        public User TryGetUserSessionByEmail()
         {
-            string email = TryGet(emailKey);
+            string email = TryGet(UserSessionConst.Email);
 
             if (string.IsNullOrWhiteSpace(email))
                 return null;

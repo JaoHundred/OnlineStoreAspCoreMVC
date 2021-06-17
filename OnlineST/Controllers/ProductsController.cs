@@ -21,12 +21,22 @@ namespace OnlineST.Controllers
 {
     public class ProductsController : Controller
     {
-        public ProductsController(IBaseRepository<Product> productRepository)
+        public ProductsController(
+            IBaseRepository<Product> productRepository, 
+            CartProductRepository cartProductRepository, 
+            UserRepository userRepository,
+            UserSessionService userSessionService)
         {
             _productRepository = productRepository;
+            _cartProductRepository = cartProductRepository;
+            _userRepository = userRepository;
+            _userSessionService = userSessionService;
         }
 
         private readonly IBaseRepository<Product> _productRepository;
+        private readonly CartProductRepository _cartProductRepository;
+        private readonly UserRepository _userRepository;
+        private readonly UserSessionService _userSessionService;
 
         [HttpGet]
         [Route("/Page/{page?}")]
@@ -160,6 +170,36 @@ namespace OnlineST.Controllers
             {
                 return BadRequest(ex);
             }
+        }
+
+        [HttpPost]
+        public IActionResult AddToShoppingCart(int id)
+        {
+            //TODO:testar adição do cartProduct no user
+
+            var user = _userSessionService.TryGetUserSessionByEmail();
+            Product product = _productRepository.FindData(id);
+
+            if (product is null)
+                return StatusCode(204);
+
+            if (user is null)
+                return Redirect("/Account/Index");
+
+            var cartProduct = new CartProduct
+            {
+                AddedDate = DateTimeOffset.UtcNow,
+                Product = product,
+            };
+
+            cartProduct = _cartProductRepository.FindData( _cartProductRepository.Add(cartProduct));
+            user.CartProducts.Add(cartProduct);
+
+            _userRepository.Update(user, user.Id);
+
+            //TODO:exibir mensagem de sucesso
+
+            return StatusCode(204);
         }
     }
 }

@@ -1,0 +1,20 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model OnlineST.Models.Pagination.PaginatedCollection<CartProduct>
+
+<div>
+
+    @foreach (CartProduct cartProduct in Model.Collection)
+    {
+        <div class="card">
+            <div class="card-body">@cartProduct.Product?.Name</div>
+            <div class="card-footer"></div>
+        </div>
+    }
+
+</div>
+
+

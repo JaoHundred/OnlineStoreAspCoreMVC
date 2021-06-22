@@ -15,7 +15,7 @@ namespace OnlineST.Repository
         { }
 
 
-        public async Task<PaginatedCollection<CartProduct>> GetUserCartProductsAsync(int userId, int pageNumber, int elementsPerPage = 20)
+        public async Task<PaginatedCollection<CartProduct>> GetUserCartProductsAsync(long userId, int pageNumber, int elementsPerPage = 20)
         {
             int skip = (pageNumber - 1) * elementsPerPage;
 
@@ -23,7 +23,7 @@ namespace OnlineST.Repository
             var task = Task.Run(() =>
             {
                 return _dBContext.LiteDatabase
-                .GetCollection<User>().FindById(userId);
+                .GetCollection<User>().Include(p => p.CartProducts).FindById(userId);
                 //.Include(p => p.CartProducts)
                 //.Query()
                 //.Offset(skip)
@@ -34,12 +34,27 @@ namespace OnlineST.Repository
 
             var result = await task;
 
-            int elementsCount = result.CartProducts.Count();
+            int elementsCount = result.CartProducts?.Count ?? 0 ;
 
 
             PaginatedCollection<CartProduct> collection = result.CartProducts.ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
             //TODO: testar esse método quando estiver com mais dados de produtos no banco
             return collection;
+        }
+
+        /// <summary>
+        /// Procura por um CartProduct que tenha como filho um Product
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public CartProduct FindByProductId(long id)
+        {
+            return _dBContext.LiteDatabase.GetCollection<CartProduct>().FindAll().FirstOrDefault(p => p.Product?.Id == id);
+        }
+
+        public CartProduct FindDataCartProduct(long id)
+        {
+            return _dBContext.LiteDatabase.GetCollection<CartProduct>().Include(p => p.Product).FindById(id);
         }
     }
 }

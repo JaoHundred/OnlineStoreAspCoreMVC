@@ -175,7 +175,8 @@ namespace OnlineST.Controllers
         [HttpPost]
         public IActionResult AddToShoppingCart(int id)
         {
-            //TODO:testar adição do cartProduct no user
+            //TODO:está adicionando corretamente nas coleções(por referência e id) mas não está recuperando o objeto(exemplo, dentro de cartproduct não
+            //recupera a referência de product quando carrega, deve estar faltando um include?)
 
             var user = _userSessionService.TryGetUserSessionByEmail();
             Product product = _productRepository.FindData(id);
@@ -192,14 +193,21 @@ namespace OnlineST.Controllers
                 Product = product,
             };
 
-            cartProduct = _cartProductRepository.FindData( _cartProductRepository.Add(cartProduct));
+            cartProduct = _cartProductRepository.FindDataCartProduct( _cartProductRepository.Add(cartProduct));
+
             user.CartProducts.Add(cartProduct);
 
             _userRepository.Update(user, user.Id);
 
-            //TODO:exibir mensagem de sucesso
+            var messageVM = new MessageViewModel 
+            {
+                Message = $"Produto {product.Name} adicionado ao carrinho",
+                MessageType = MessageType.success,
+            };
 
-            return StatusCode(204);
+            TempData.PutExt(nameof(MessageViewModel), messageVM);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

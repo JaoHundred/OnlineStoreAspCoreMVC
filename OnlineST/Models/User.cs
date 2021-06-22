@@ -9,10 +9,11 @@ namespace OnlineST.Models
     {
         public User()
         {
-
+            if (CartProducts is null)
+                CartProducts = new List<CartProduct>();
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public UserType UserType { get; set; } = UserType.None;
         public string Email { get; set; }
         public byte[] PasswordHash { get;  set; }

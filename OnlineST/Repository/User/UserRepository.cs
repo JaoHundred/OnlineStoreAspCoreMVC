@@ -17,7 +17,7 @@ namespace OnlineST.Repository
             if (string.IsNullOrEmpty(email))
                 return null;
 
-            return _dBContext.LiteDatabase. GetCollection<User>(nameof(User)).Include(p => p.CartProducts).FindOne(p => p.Email == email);
+            return _dBContext.LiteDatabase.GetCollection<User>().Include(p => p.CartProducts).FindOne(p => p.Email == email);
         }
     }
 }

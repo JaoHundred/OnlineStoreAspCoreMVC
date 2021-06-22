@@ -18,17 +18,17 @@ namespace OnlineST.Repository
 
         protected ILiteDBContext _dBContext;
 
-        public int Add(T data)
+        public long Add(T data)
         {
             return _dBContext.LiteDatabase.GetCollection<T>().Insert(data);
         }
 
-        public bool Delete(int id)
+        public bool Delete(long id)
         {
             return _dBContext.LiteDatabase.GetCollection<T>().Delete(id);
         }
 
-        public bool Update(T data, int id)
+        public bool Update(T data, long id)
         {
             return _dBContext.LiteDatabase.GetCollection<T>().Update(id, data);
         }
@@ -65,7 +65,7 @@ namespace OnlineST.Repository
             return await task;
         }
 
-        public T FindData(int id)
+        public T FindData(long id)
         {
             return _dBContext.LiteDatabase.GetCollection<T>().FindById(id);
         }

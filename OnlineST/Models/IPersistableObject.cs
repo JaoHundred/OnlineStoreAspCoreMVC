@@ -7,6 +7,6 @@ namespace OnlineST.Models
 {
     public interface IPersistableObject
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
     }
 }

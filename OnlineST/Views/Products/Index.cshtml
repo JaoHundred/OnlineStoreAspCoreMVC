@@ -2,7 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-
+    var messageVM = TempData.GetExt<MessageViewModel>(nameof(MessageViewModel));
     User user = _userSessionService.TryGetUserSessionByEmail();
 
 }
@@ -11,9 +11,17 @@
 @inject OnlineST.Services.UserSessionService _userSessionService
 @inject OnlineST.Repository.IBaseRepository<Product> _productRepository
 
+@using OnlineST.Models.ViewModel;
 @model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
+
 @using OnlineST.Models.ViewModel.Modal
 
+@if (messageVM != null)
+{
+    <div class="alert alert-@messageVM.MessageType border-@messageVM.MessageType center margin5px">
+        <span>@messageVM.Message</span>
+    </div>
+}
 
 <div class="d-flex flex-row flex-wrap margin5px">
     @foreach (Product product in Model.Collection)

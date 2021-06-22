@@ -27,6 +27,9 @@ namespace OnlineST.Controllers
         {
             var user = _userSessionService.TryGetUserSessionByEmail();
 
+            if(user is null)
+                return Redirect("/Account/Index");
+
             PaginatedCollection<CartProduct> paginatedCollection = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, 10);
 
             return View(paginatedCollection);

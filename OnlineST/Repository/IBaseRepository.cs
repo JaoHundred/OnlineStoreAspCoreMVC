@@ -10,10 +10,10 @@ namespace OnlineST.Repository
 {
     public interface IBaseRepository<T>
     {
-        int Add(T data);
-        bool Delete(int id);
+        long Add(T data);
+        bool Delete(long id);
 
-        bool Update(T data, int id);
+        bool Update(T data, long id);
 
         bool Upsert(T data);
 
@@ -21,6 +21,6 @@ namespace OnlineST.Repository
 
         Task<IEnumerable<T>> GetAllDataAsync();
 
-        T FindData(int id);
+        T FindData(long id);
     }
 }

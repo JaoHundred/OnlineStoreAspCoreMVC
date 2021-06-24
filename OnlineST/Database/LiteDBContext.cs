@@ -16,13 +16,16 @@ namespace OnlineST.Database
         {
             var bsonMapper = BsonMapper.Global;
 
-            bsonMapper.Entity<User>().Id(p => p.Id)
-                .DbRef(p => p.CartProducts, "cartProducts");
+            bsonMapper.Entity<Product>()
+                .Id(p => p.Id);
 
-            bsonMapper.Entity<CartProduct>().Id(p => p.Id)
+            bsonMapper.Entity<CartProduct>()
+                .Id(p => p.Id)
                 .DbRef(p => p.Product, "product");
 
-            bsonMapper.Entity<Product>().Id(p => p.Id);
+            bsonMapper.Entity<User>()
+                .Id(p => p.Id)
+                .DbRef(p => p.CartProducts, "cartProduct");
 
             string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "database.db");
 

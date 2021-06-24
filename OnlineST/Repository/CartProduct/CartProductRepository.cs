@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LiteDB;
 using OnlineST.Database;
 using OnlineST.Models;
 using OnlineST.Models.Pagination;
@@ -22,24 +23,36 @@ namespace OnlineST.Repository
             //TODO: passos a ser feito, pegar a coleção de usuários, incluir cartproducts e talvez incluir também product(relação de 3 coleções)
             var task = Task.Run(() =>
             {
-                return _dBContext.LiteDatabase
-                .GetCollection<User>().Include(p => p.CartProducts).FindById(userId);
-                //.Include(p => p.CartProducts)
+                var bla = _dBContext.LiteDatabase.GetCollection<User>()
+                .Include(p => p.CartProducts)
+                .Include(BsonExpression.Create("$.CartProducts[*].Product"))
+                .FindById(userId);
+                
                 //.Query()
                 //.Offset(skip)
                 //.Limit(elementsPerPage);
 
                 //return result.ToEnumerable().FirstOrDefault(p => p.Id == userId);
+
+
+                //TODO:resolver a parte de paginação, observar o que já está comentado logo acima, já foi resolvido os includes em cascata
+
+                return bla;
             });
 
             var result = await task;
 
-            int elementsCount = result.CartProducts?.Count ?? 0 ;
+            int elementsCount = result.CartProducts?.Count ?? 0;
 
 
             PaginatedCollection<CartProduct> collection = result.CartProducts.ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
             //TODO: testar esse método quando estiver com mais dados de produtos no banco
             return collection;
+        }
+
+        private object GetProducts()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -11,9 +11,9 @@ namespace OnlineST.Components
     public class PaginationViewComponent : ViewComponent
     {
         //TODO:ver como será montado a paginação
-        public async Task<IViewComponentResult> InvokeAsync(PaginatedCollection<Product> paginatedCollection)
+        public async Task<IViewComponentResult> InvokeAsync(IPaginationModel paginationModel)
         {
-            return View(paginatedCollection);
+            return View(paginationModel);
         }
     }
 }

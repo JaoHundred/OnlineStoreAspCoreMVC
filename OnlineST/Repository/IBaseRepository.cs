@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OnlineST.Repository
 {
-    public interface IBaseRepository<T>
+    public interface IBaseRepository<T> where T : IPersistableObject
     {
         long Add(T data);
         bool Delete(long id);

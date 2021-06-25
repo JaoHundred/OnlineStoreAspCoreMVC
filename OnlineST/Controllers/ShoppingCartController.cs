@@ -23,6 +23,8 @@ namespace OnlineST.Controllers
         private readonly CartProductRepository _cartProductRepository;
         private readonly UserSessionService _userSessionService;
 
+        [HttpGet]
+        [Route("Carrinho/Page/{page?}")]
         public async Task<IActionResult> Index(int? page)
         {
             var user = _userSessionService.TryGetUserSessionByEmail();
@@ -30,9 +32,13 @@ namespace OnlineST.Controllers
             if(user is null)
                 return Redirect("/Account/Index");
 
-            PaginatedCollection<CartProduct> paginatedCollection = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, 10);
+            PaginatedCollection<CartProduct> cartProducts = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, elementsPerPage: 2);
 
-            return View(paginatedCollection);
+            var paginationModel = new PaginationModel<CartProduct>(cartProducts, "ShoppingCart", nameof(Index));
+
+            //TODO: preparar a view de "carrinho"(montar o html)
+
+            return View(paginationModel);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OnlineST.Models.Pagination
 {
-    public class PaginatedCollection<T> : IPaginatedCollection
+    public class PaginatedCollection<T> : IPaginatedCollection<T> where T : IPersistableObject
     {
         public PaginatedCollection(IEnumerable<T> collection, int total, int pageNumber, int pageSize)
         {

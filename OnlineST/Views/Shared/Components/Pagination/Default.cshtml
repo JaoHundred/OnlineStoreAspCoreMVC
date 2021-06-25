@@ -32,20 +32,21 @@
     }
 </style>
 
-@model OnlineST.Models.Pagination.IPaginatedCollection;
+@model OnlineST.Models.Pagination.IPaginationModel;
 
 <div class="centerText margin20px">
     <div class="pagination">
 
-        @if (Model.PreviousPage)
+        @if (Model.PaginatedCollection.PreviousPage)
         {
-            int previousPage = Model.PageNumber - 1;
+            int previousPage = Model.PaginatedCollection.PageNumber - 1;
 
-            <a asp-controller="Products" asp-action="Index" asp-route-page="@previousPage ">&laquo;</a>
-            <a asp-controller="Products" asp-action="Index" asp-route-page="@previousPage">@previousPage</a>
+            <a asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@previousPage ">&laquo;</a>
+            <a asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@previousPage">@previousPage</a>
         }
 
-        <a class="active" asp-controller="Products" asp-action="Index" asp-route-page="@Model.PageNumber">@Model.PageNumber</a>
+        <a class="active" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" 
+           asp-route-page="@Model.PaginatedCollection.PageNumber">@Model.PaginatedCollection.PageNumber</a>
 
 
         @*@for (int i = Model.PageNumber; i < Model.TotalPages; i++)
@@ -55,12 +56,12 @@
             <a class="active" asp-controller="Products" asp-action="Index" asp-route-page="@i">@i</a>
         }*@
 
-        @if (Model.NextPage)
+        @if (Model.PaginatedCollection.NextPage)
         {
-            int nextPage = Model.PageNumber + 1;
+            int nextPage = Model.PaginatedCollection.PageNumber + 1;
             
-            <a asp-controller="Products" asp-action="Index" asp-route-page="@nextPage">@nextPage</a>
-            <a asp-controller="Products" asp-action="Index" asp-route-page="@nextPage">&raquo;</a>
+            <a asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@nextPage">@nextPage</a>
+            <a asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" asp-route-page="@nextPage">&raquo;</a>
         }
     </div>
 </div>

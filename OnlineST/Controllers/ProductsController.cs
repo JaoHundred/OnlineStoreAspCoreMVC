@@ -22,8 +22,8 @@ namespace OnlineST.Controllers
     public class ProductsController : Controller
     {
         public ProductsController(
-            IBaseRepository<Product> productRepository, 
-            CartProductRepository cartProductRepository, 
+            IBaseRepository<Product> productRepository,
+            CartProductRepository cartProductRepository,
             UserRepository userRepository,
             UserSessionService userSessionService)
         {
@@ -39,12 +39,14 @@ namespace OnlineST.Controllers
         private readonly UserSessionService _userSessionService;
 
         [HttpGet]
-        [Route("/Page/{page?}")]
+        [Route("Produtos/Page/{page?}")]
         public async Task<IActionResult> Index(int? page)
         {
             PaginatedCollection<Product> products = await _productRepository.GetAllDataAsync(page ?? 1, elementsPerPage: 5);
 
-            return View(products);
+            var model = new PaginationModel<Product>(products, "Products", nameof(Index));
+
+            return View(model);
         }
 
         // GET: RegisterProductsController/Details/5
@@ -193,13 +195,13 @@ namespace OnlineST.Controllers
                 Product = product,
             };
 
-            cartProduct = _cartProductRepository.FindDataCartProduct( _cartProductRepository.Add(cartProduct));
+            cartProduct = _cartProductRepository.FindDataCartProduct(_cartProductRepository.Add(cartProduct));
 
             user.CartProducts.Add(cartProduct);
 
             _userRepository.Update(user, user.Id);
 
-            var messageVM = new MessageViewModel 
+            var messageVM = new MessageViewModel
             {
                 Message = $"Produto {product.Name} adicionado ao carrinho",
                 MessageType = MessageType.success,

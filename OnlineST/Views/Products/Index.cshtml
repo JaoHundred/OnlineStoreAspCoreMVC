@@ -12,9 +12,10 @@
 @inject OnlineST.Repository.IBaseRepository<Product> _productRepository
 
 @using OnlineST.Models.ViewModel;
-@model OnlineST.Models.Pagination.PaginatedCollection<OnlineST.Models.Product>
+@model OnlineST.Models.Pagination.PaginationModel<Product>
 
 @using OnlineST.Models.ViewModel.Modal
+@using OnlineST.Models.Pagination;
 
 @if (messageVM != null)
 {
@@ -24,7 +25,7 @@
 }
 
 <div class="d-flex flex-row flex-wrap margin5px">
-    @foreach (Product product in Model.Collection)
+    @foreach (Product product in (Model.PaginatedCollection as IPaginatedCollection<Product>).Collection)
     {
         <div class="border border-2 card-product margin5px">
             @*produtos*@
@@ -86,7 +87,7 @@
                 </div>
             </div>
         </div>
-    }
+                }
 
     @if (user?.UserType == UserType.Admin)
     {
@@ -102,7 +103,7 @@
 
 </div>
 
-@await Component.InvokeAsync("Pagination", Model)
+@await Component.InvokeAsync(typeof(OnlineST.Components.PaginationViewComponent), Model)
 
 <!-- Modal -->
 <div class="modal fade" id="modalDialog" tabindex="-1" aria-labelledby="modalDialog" aria-hidden="true">

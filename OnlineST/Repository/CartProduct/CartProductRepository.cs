@@ -19,33 +19,23 @@ namespace OnlineST.Repository
         public async Task<PaginatedCollection<CartProduct>> GetUserCartProductsAsync(long userId, int pageNumber, int elementsPerPage = 20)
         {
             int skip = (pageNumber - 1) * elementsPerPage;
+            int elementsCount = 0;
 
-            //TODO: passos a ser feito, pegar a coleção de usuários, incluir cartproducts e talvez incluir também product(relação de 3 coleções)
             var task = Task.Run(() =>
             {
-                var bla = _dBContext.LiteDatabase.GetCollection<User>()
+                var user = _dBContext.LiteDatabase.GetCollection<User>()
                 .Include(p => p.CartProducts)
                 .Include(BsonExpression.Create("$.CartProducts[*].Product"))
                 .FindById(userId);
-                
-                //.Query()
-                //.Offset(skip)
-                //.Limit(elementsPerPage);
 
-                //return result.ToEnumerable().FirstOrDefault(p => p.Id == userId);
+                elementsCount = user.CartProducts?.Count ?? 0;
 
-
-                //TODO:resolver a parte de paginação, observar o que já está comentado logo acima, já foi resolvido os includes em cascata
-
-                return bla;
+                return user.CartProducts?.Skip(skip).Take(elementsPerPage);
             });
 
-            var result = await task;
+            var cartProducts = await task;
 
-            int elementsCount = result.CartProducts?.Count ?? 0;
-
-
-            PaginatedCollection<CartProduct> collection = result.CartProducts.ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
+            PaginatedCollection<CartProduct> collection = cartProducts.ToPaginationCollection(elementsCount, pageNumber, elementsPerPage);
             //TODO: testar esse método quando estiver com mais dados de produtos no banco
             return collection;
         }

@@ -68,6 +68,10 @@ a.nav-link:focus {
     text-align: center;
 }
 
+.word-wrap{
+    word-wrap:break-word;
+}
+
 .end {
     align-self: end;
     text-align: center;

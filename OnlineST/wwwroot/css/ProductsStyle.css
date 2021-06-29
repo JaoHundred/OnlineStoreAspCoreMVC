@@ -10,6 +10,7 @@ div.card-product {
     display: flex;
     flex-direction: column;
     width: 250px;
+    height:650px;
 }
 
 .cardContent {

@@ -14,7 +14,6 @@
 @using OnlineST.Models.ViewModel;
 @model OnlineST.Models.Pagination.PaginationModel<Product>
 
-@using OnlineST.Models.ViewModel.Modal
 @using OnlineST.Models.Pagination;
 
 @if (messageVM != null)
@@ -75,14 +74,12 @@
                 </div>
             </form>
 
-
-
             <div class="margin5px">
                 <div class="d-flex flex-column">
                     <h4 class="spacing row marginTop10px center">@product.Name</h4>
                     <h5 class="spacing row marginTop10px end">R$@product.Price</h5>
                     <div class="spacing row overflow-auto cardContent marginTop10px">
-                        <label>@product.Description</label>
+                        <label class="word-wrap">@product.Description</label>
                     </div>
                 </div>
             </div>

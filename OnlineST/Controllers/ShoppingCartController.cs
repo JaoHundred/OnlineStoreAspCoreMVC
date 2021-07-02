@@ -36,7 +36,7 @@ namespace OnlineST.Controllers
 
             var paginationModel = new PaginationModel<CartProduct>(cartProducts, "ShoppingCart", nameof(Index));
 
-            //TODO: preparar a view de "carrinho"(montar o html)
+            //TODO: carregar a imagem dos respectivos produtos na view
 
             return View(paginationModel);
         }

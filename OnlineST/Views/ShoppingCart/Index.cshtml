@@ -3,24 +3,59 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/css/CartProductStyle.css" rel="stylesheet" />
+
 @model OnlineST.Models.Pagination.PaginationModel<CartProduct>
 
 @using OnlineST.Models.Pagination;
 
-<div>
-    @if (Model.PaginatedCollection is not null)
+@{
+    var cartProductPaginatedCollection = Model.PaginatedCollection as IPaginatedCollection<CartProduct>;
+}
+
+
+@{
+
+
+    if (cartProductPaginatedCollection?.Collection.Count() > 0)
     {
-        @foreach (CartProduct cartProduct in (Model.PaginatedCollection as IPaginatedCollection<CartProduct>).Collection)
-        {
-            <div class="card">
-                <div class="card-body">@cartProduct.Product?.Name</div>
-                <div class="card-footer"></div>
+        <div class="d-flex flex-column gap-4 margin5px center">
+            @foreach (CartProduct cartProduct in cartProductPaginatedCollection.Collection)
+            {
+                <div class="mx-auto d-flex flex-column fixedFlexColumn card-ShoppingCartProduct padding3px marginSides5px text-center "
+                     style="width:45%">
+                        <h3>@cartProduct.Product?.Name</h3>
+                        <label>Quantidade @cartProduct.Product?.Amount</label>
+                        <label>@cartProduct.Product?.Description</label>
+
+                        <form method="post">
+
+                            <div class="w-50 mx-auto d-flex">
+                                <button class=" formIconButton FontIcon material-icons  " type="submit">
+                                    delete
+                                </button>
+                            </div>
+
+                        </form>
+                </div>
+            }
+
+            <div class="container-fluid d-flex flex-column-reverse ">
+
+                <button class="button align-self-end w-25" style="height:50px">Confirmar compra</button>
             </div>
-        }
+
+        </div>
+
+        @await Component.InvokeAsync(typeof(OnlineST.Components.PaginationViewComponent), Model)
     }
 
-</div>
+    else
+    {
+        <div class="d-flex justify-content-center" style="height:100%; width:100%">
+            <h2 class="center">Carrinho vazio</h2>
+        </div>
+    }
 
-@await Component.InvokeAsync(typeof(OnlineST.Components.PaginationViewComponent), Model)
-
+}
 

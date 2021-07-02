@@ -1,0 +1,10 @@
+﻿.card-ShoppingCartProduct {
+    background-color: rgb(214 242 239);
+    border: solid 3px rgb(180 211 207);
+}
+
+.card-ShoppingCartProduct:hover,
+.card-ShoppingCartProduct:focus {
+    background-color: rgb(182 248 242);
+    cursor:context-menu;
+}

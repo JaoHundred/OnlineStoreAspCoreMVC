@@ -19,24 +19,32 @@
 
     if (cartProductPaginatedCollection?.Collection.Count() > 0)
     {
-        <div class="d-flex flex-column gap-4 margin5px center">
+        <div class="d-flex flex-md-row flex-wrap gap-4 margin5px ">
             @foreach (CartProduct cartProduct in cartProductPaginatedCollection.Collection)
             {
-                <div class="mx-auto d-flex flex-column fixedFlexColumn card-ShoppingCartProduct padding3px marginSides5px text-center "
-                     style="width:45%">
-                        <h3>@cartProduct.Product?.Name</h3>
-                        <label>Quantidade @cartProduct.Product?.Amount</label>
-                        <label>@cartProduct.Product?.Description</label>
+                <div class="d-flex flex-column card-ShoppingCartProduct padding3px marginSides5px text-center ">
 
-                        <form method="post">
+                    @{
+                        var imageUrl = @Url.Action("ConvertToImageSRC", "ShoppingCart", new { Id = cartProduct.Id });
 
-                            <div class="w-50 mx-auto d-flex">
-                                <button class=" formIconButton FontIcon material-icons  " type="submit">
-                                    delete
-                                </button>
-                            </div>
+                        <img class="center img border border-3 border-color spacing border-radius" src="@imageUrl"
+                             alt="@string.Format("{0}.png", cartProduct.Product.Name)"
+                             style="width:200px" />
+                    }
+                    <h3 class="word-wrap">@cartProduct.Product?.Name</h3>
+                    <label>Quantidade @cartProduct.Amount</label>
+                    <label>@cartProduct.Product?.Description</label>
 
-                        </form>
+                    <form method="post">
+
+                        <div class="w-50 mx-auto d-flex">
+                            <button class=" formIconButton FontIcon material-icons  " type="button"
+                                    onclick="CreateModal('modalDialog','Modal','CartOpenModal','@cartProduct.Id')">
+                                delete
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
             }
 
@@ -58,4 +66,30 @@
     }
 
 }
+
+<!-- Modal -->
+<div class="modal fade" id="modalDialog" tabindex="-1" aria-labelledby="modalDialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDialog">
+                    <label id="labelTitle"></label>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label id="labelMessageBody"></label>
+            </div>
+            <div class="modal-footer">
+                <form method="post">
+                    <button type="submit" class="btn btn-primary" id="modalConfirmDelete">
+                        Confirmar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/js/ModalManager.js"></script>
 

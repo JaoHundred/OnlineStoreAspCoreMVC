@@ -157,8 +157,7 @@ namespace OnlineST.Controllers
             }
         }
 
-        [Route("/img/{name}")]
-        [Route(nameof(ConvertToImageSRC))]
+        [Route("/Produto/img/{id}")]
         public IActionResult ConvertToImageSRC(int id)
         {
             try
@@ -175,11 +174,9 @@ namespace OnlineST.Controllers
         }
 
         [HttpPost]
+        [AuthorizeUser]
         public IActionResult AddToShoppingCart(int id)
         {
-            //TODO:está adicionando corretamente nas coleções(por referência e id) mas não está recuperando o objeto(exemplo, dentro de cartproduct não
-            //recupera a referência de product quando carrega, deve estar faltando um include?)
-
             var user = _userSessionService.TryGetUserSessionByEmail();
             Product product = _productRepository.FindData(id);
 
@@ -189,15 +186,25 @@ namespace OnlineST.Controllers
             if (user is null)
                 return Redirect("/Account/Index");
 
-            var cartProduct = new CartProduct
+            CartProduct existingCartProduct = _cartProductRepository.FindCartProductByUserId(user.Id, product.Id);
+
+            if (existingCartProduct is null)
             {
-                AddedDate = DateTimeOffset.UtcNow,
-                Product = product,
-            };
+                var cartProduct = new CartProduct
+                {
+                    AddedDate = DateTimeOffset.UtcNow,
+                    Product = product,
+                };
 
-            cartProduct = _cartProductRepository.FindDataCartProduct(_cartProductRepository.Add(cartProduct));
+                cartProduct = _cartProductRepository.FindCartProduct(_cartProductRepository.Add(cartProduct));
+                user.CartProducts.Add(cartProduct);
+            }
+            else
+            {
+                existingCartProduct.Amount++;
+                _cartProductRepository.Update(existingCartProduct, existingCartProduct.Id);
+            }
 
-            user.CartProducts.Add(cartProduct);
 
             _userRepository.Update(user, user.Id);
 

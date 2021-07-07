@@ -12,6 +12,6 @@ namespace OnlineST.Models.ViewModel.Modal
         public string Controller { get; set; }
         public string Action { get; set; }
 
-        public int? Id { get; set; }
+        public long? Id { get; set; }
     }
 }

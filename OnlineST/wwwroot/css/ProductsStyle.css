@@ -17,16 +17,5 @@ div.card-product {
     height: 200px;
 }
 
-img.img {
-    height: 200px;
-    margin:5px;
-    background-color:white;
-}
 
-.border-color{
-    border-color: rgb(13, 178, 222) !important;
-}
 
-.border-radius{
-    border-radius: 5%;
-}

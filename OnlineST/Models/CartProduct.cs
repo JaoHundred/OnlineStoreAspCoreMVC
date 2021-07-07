@@ -14,6 +14,7 @@ namespace OnlineST.Models
 
         public long Id { get; set; }
         public DateTimeOffset AddedDate { get; set; }
+        public int Amount { get; set; } = 1;
 
         public Product Product { get; set; }
     }

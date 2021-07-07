@@ -40,24 +40,22 @@ namespace OnlineST.Repository
             return collection;
         }
 
-        private object GetProducts()
+        public CartProduct FindCartProductByUserId(long userId, long productId)
         {
-            throw new NotImplementedException();
+            var user = _dBContext.LiteDatabase.GetCollection<User>()
+                .Include(p => p.CartProducts)
+                .Include(BsonExpression.Create("$.CartProducts[*].Product"))
+                .FindById(userId);
+
+            return user.CartProducts.Find(p => p.Product.Id == productId);
         }
 
-        /// <summary>
-        /// Procura por um CartProduct que tenha como filho um Product
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public CartProduct FindByProductId(long id)
-        {
-            return _dBContext.LiteDatabase.GetCollection<CartProduct>().FindAll().FirstOrDefault(p => p.Product?.Id == id);
-        }
 
-        public CartProduct FindDataCartProduct(long id)
+        public CartProduct FindCartProduct(long id)
         {
-            return _dBContext.LiteDatabase.GetCollection<CartProduct>().Include(p => p.Product).FindById(id);
+            return _dBContext.LiteDatabase.GetCollection<CartProduct>()
+                .Include(p => p.Product)
+                .FindById(id);
         }
     }
 }

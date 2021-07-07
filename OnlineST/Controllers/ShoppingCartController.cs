@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineST.Filters;
 using OnlineST.Models;
 using OnlineST.Models.Pagination;
 using OnlineST.Repository;
@@ -32,13 +33,47 @@ namespace OnlineST.Controllers
             if(user is null)
                 return Redirect("/Account/Index");
 
-            PaginatedCollection<CartProduct> cartProducts = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, elementsPerPage: 2);
+            PaginatedCollection<CartProduct> cartProducts = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, elementsPerPage: 10);
 
             var paginationModel = new PaginationModel<CartProduct>(cartProducts, "ShoppingCart", nameof(Index));
 
-            //TODO: carregar a imagem dos respectivos produtos na view
-
             return View(paginationModel);
+        }
+
+        [Route("/Carrinho/img/{id}")]
+        public IActionResult ConvertToImageSRC(int id)
+        {
+            try
+            {
+                CartProduct cartProduct = _cartProductRepository.FindCartProduct(id);
+                FileContentResult fileContentResult = File(cartProduct.Product.ImageBytes, "image/png");
+
+                return fileContentResult;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public IActionResult ConfirmDelete(int id)
+        {
+
+            //TODO:se existir mais de 1 item, reduzir a quantidade, se só houver 1, deletar o registro
+
+            try
+            {
+                _cartProductRepository.Delete(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

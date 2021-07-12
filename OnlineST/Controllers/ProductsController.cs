@@ -194,10 +194,15 @@ namespace OnlineST.Controllers
                 {
                     AddedDate = DateTimeOffset.UtcNow,
                     Product = product,
+                    Amount = 1,
                 };
 
-                cartProduct = _cartProductRepository.FindCartProduct(_cartProductRepository.Add(cartProduct));
+                long cartId = _cartProductRepository.Upsert(cartProduct);
+
+                cartProduct = _cartProductRepository.FindCartProduct(cartId);
+
                 user.CartProducts.Add(cartProduct);
+                
             }
             else
             {

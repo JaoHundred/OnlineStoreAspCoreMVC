@@ -30,7 +30,7 @@ namespace OnlineST.Controllers
         {
             var user = _userSessionService.TryGetUserSessionByEmail();
 
-            if(user is null)
+            if (user is null)
                 return Redirect("/Account/Index");
 
             PaginatedCollection<CartProduct> cartProducts = await _cartProductRepository.GetUserCartProductsAsync(user.Id, page ?? 1, elementsPerPage: 10);
@@ -61,12 +61,24 @@ namespace OnlineST.Controllers
         [AuthorizeUser]
         public IActionResult ConfirmDelete(int id)
         {
-
-            //TODO:se existir mais de 1 item, reduzir a quantidade, se só houver 1, deletar o registro
-
             try
             {
-                _cartProductRepository.Delete(id);
+                CartProduct cartProduct = _cartProductRepository.FindCartProduct(id);
+
+                if (cartProduct.Amount > 1)
+                {
+                    cartProduct.Amount--;
+                    _cartProductRepository.Update(cartProduct, cartProduct.Id);
+                }
+                else
+                {
+                    User user = _userSessionService.TryGetUserSessionByEmail();
+
+                    if (user is null)
+                        return BadRequest("Usuário não encontrado");
+
+                    _cartProductRepository.Delete(user.Id, id);
+                }
 
                 return RedirectToAction(nameof(Index));
             }

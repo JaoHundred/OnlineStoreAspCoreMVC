@@ -57,5 +57,31 @@ namespace OnlineST.Repository
                 .Include(p => p.Product)
                 .FindById(id);
         }
+
+        public CartProduct FindCartProductByProductId(long productId)
+        {
+            return _dBContext.LiteDatabase.GetCollection<CartProduct>()
+                .Include(p => p.Product)
+                .FindOne(p => p.Product.Id == productId);
+        }
+
+        /// <summary>
+        /// Deleta o CartProduct e sua referência dentro de User
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cartId"></param>
+        /// <returns></returns>
+        public bool Delete(long userId, long cartId)
+        {
+            var cartProductCollection = _dBContext.LiteDatabase.GetCollection<CartProduct>();
+            var userCollection = _dBContext.LiteDatabase.GetCollection<User>();
+            User user = userCollection.FindById(userId);
+
+            bool deletedCartItem = cartProductCollection.Delete(cartId);
+            int deletedAmoundCartItemReferences = user.CartProducts.RemoveAll(p => p.Id == cartId);
+            bool updatedUser = userCollection.Update(user.Id, user);
+
+            return deletedCartItem && deletedAmoundCartItemReferences > 0 && updatedUser;
+        }
     }
 }

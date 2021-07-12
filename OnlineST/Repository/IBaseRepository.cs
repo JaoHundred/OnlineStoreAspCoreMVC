@@ -13,9 +13,9 @@ namespace OnlineST.Repository
         long Add(T data);
         bool Delete(long id);
 
-        bool Update(T data, long id);
+        long Update(T data, long id);
 
-        bool Upsert(T data);
+        long Upsert(T data);
 
         Task<PaginatedCollection<T>> GetAllDataAsync(int pageNumber, int elementsPerPage = 20);
 

@@ -28,9 +28,14 @@ namespace OnlineST.Repository
             return _dBContext.LiteDatabase.GetCollection<T>().Delete(id);
         }
 
-        public bool Update(T data, long id)
+        public long Update(T data, long id)
         {
-            return _dBContext.LiteDatabase.GetCollection<T>().Update(id, data);
+            bool success = _dBContext.LiteDatabase.GetCollection<T>().Update(id, data);
+
+            if (success)
+                return id;
+
+            return 0;
         }
 
         public async Task<PaginatedCollection<T>> GetAllDataAsync(int pageNumber, int elementsPerPage = 20)
@@ -70,23 +75,22 @@ namespace OnlineST.Repository
             return _dBContext.LiteDatabase.GetCollection<T>().FindById(id);
         }
 
-        public bool Upsert(T data)
+        public long Upsert(T data)
         {
             int count = _dBContext.LiteDatabase.GetCollection<T>().Count(p => p.Id == data.Id);
 
-            if(count > 0)
+            if (count > 0)
             {
                 Update(data, data.Id);
-                return true;
+                return FindData(data.Id).Id;
             }
-            else if(count == 0)
+            else if (count == 0)
             {
-                Add(data);
-                return true;
+                return Add(data);
             }
 
-            return false;
-           
+            return 0;
+
         }
     }
 }

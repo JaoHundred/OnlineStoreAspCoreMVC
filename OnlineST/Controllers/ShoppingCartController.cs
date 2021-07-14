@@ -77,7 +77,7 @@ namespace OnlineST.Controllers
                     if (user is null)
                         return BadRequest("Usuário não encontrado");
 
-                    _cartProductRepository.Delete(user.Id, id);
+                    _cartProductRepository.Delete(user, id);
                 }
 
                 return RedirectToAction(nameof(Index));

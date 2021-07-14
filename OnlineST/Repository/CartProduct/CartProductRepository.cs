@@ -68,14 +68,10 @@ namespace OnlineST.Repository
         /// <summary>
         /// Deleta o CartProduct e sua referência dentro de User
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="cartId"></param>
-        /// <returns></returns>
-        public bool Delete(long userId, long cartId)
+        public bool Delete(User user, long cartId)
         {
             var cartProductCollection = _dBContext.LiteDatabase.GetCollection<CartProduct>();
             var userCollection = _dBContext.LiteDatabase.GetCollection<User>();
-            User user = userCollection.FindById(userId);
 
             bool deletedCartItem = cartProductCollection.Delete(cartId);
             int deletedAmoundCartItemReferences = user.CartProducts.RemoveAll(p => p.Id == cartId);

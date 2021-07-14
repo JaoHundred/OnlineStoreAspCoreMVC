@@ -16,20 +16,20 @@ namespace OnlineST.Controllers
 {
     public class AccountController : Controller
     {
-        //TODO: fazer funcionalidades de painel/recuperação de senha(assistir um pouco mais da vídeo aula antes)
+        //TODO: fazer funcionalidades de painel/recuperação de senha, troca de senha, troca de email
 
         public AccountController(IAccountService accountService, UserSessionService sessionService)
         {
-            this.accountService = accountService;
-            this.sessionService = sessionService;
+            _accountService = accountService;
+            _sessionService = sessionService;
         }
 
-        private readonly IAccountService accountService;
-        private readonly UserSessionService sessionService;
+        private readonly IAccountService _accountService;
+        private readonly UserSessionService _sessionService;
 
         public IActionResult Index()
         {
-            string session = sessionService.TryGet(UserSessionConst.Email);
+            string session = _sessionService.TryGet(UserSessionConst.Email);
 
             if (string.IsNullOrEmpty(session))
             {
@@ -48,13 +48,6 @@ namespace OnlineST.Controllers
             return RedirectToAction(nameof(UserPainel));
         }
 
-        [AuthorizeUser]
-        public IActionResult UserPainel()
-        {
-            //TODO:montar a view de UserPainel
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CreateAccount([FromForm] UserViewModel userViewModel)
@@ -63,7 +56,7 @@ namespace OnlineST.Controllers
             try
             {
                 if (ModelState.IsValid)
-                    accResult = accountService.Create(userViewModel);
+                    accResult = _accountService.Create(userViewModel);
                 else
                     accResult = CreateAccResult.EmptyFields;
             }
@@ -117,7 +110,7 @@ namespace OnlineST.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    accResult = accountService.Login(userViewModel);
+                    accResult = _accountService.Login(userViewModel);
 
                     if (accResult == LogInAccResult.LoggedIn)
                     {
@@ -125,7 +118,7 @@ namespace OnlineST.Controllers
                         //por hora o rememberme vai ficar desligado
 
                         //if (userViewModel.RememberMe)
-                        sessionService.Set(UserSessionConst.Email, userViewModel.Email);
+                        _sessionService.Set(UserSessionConst.Email, userViewModel.Email);
                         //else
                         //{
 
@@ -164,14 +157,24 @@ namespace OnlineST.Controllers
 
         public IActionResult Logout()
         {
-            User login = sessionService.TryGetUserSessionByEmail();
+            User login = _sessionService.TryGetUserSessionByEmail();
 
             if (login == null)
                 return NoContent();
 
-            sessionService.Delete();
+            _sessionService.Delete();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [AuthorizeUser]
+        public IActionResult UserPainel()
+        {
+            //TODO:montar a view de UserPainel, usar menu lateral a esquerda(o container com a div já está pronto), ao clicar
+            //em cada item do menu javascript deve carregar na div "content" o html responsável por troca de senha, troca de email, etc respectivamente
+
+            User user = _sessionService.TryGetUserSessionByEmail();
+            return View(user.ToViewModel());
         }
     }
 }
